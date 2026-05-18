@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="description" content="Folio — Freelance Business OS"/>
+<title>Folio — Freelance Business OS</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<!-- PDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/style.css"/>
+<link rel="stylesheet" href="css/auth.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     MAIN APP  (shown after auth)
+══════════════════════════════════════ -->
+<div id="app" style="display:none">
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">F</div>
+      <div>
+        <div class="logo-text" id="logo-biz">Folio</div>
+        <div class="logo-sub">FREELANCE OS</div>
+      </div>
+    </div>
+
+    <!-- Built dynamically by buildSidebar() based on permissions -->
+    <nav id="sidebar-nav"></nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user" onclick="nav('settings')">
+        <div class="u-av" id="sidebar-av">AM</div>
+        <div style="min-width:0">
+          <div class="u-name" id="sidebar-uname" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Alex Morgan</div>
+          <div class="u-role" id="sidebar-biz" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Folio Studio</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="tb-btn" id="menu-btn" onclick="toggleSidebar()" style="display:none" title="Menu">☰</button>
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="tb-spacer"></div>
+
+      <!-- Search / command -->
+      <div class="search-wrap" onclick="openCmd()" role="button" aria-label="Search or command">
+        <span class="search-ic">🔍</span>
+        <input type="text" placeholder="Search…" readonly style="cursor:pointer" tabindex="-1"/>
+        <span class="kbd">⌘K</span>
+      </div>
+      <button class="tb-btn" onclick="openCmd()" title="Command palette (⌘K)">⌘</button>
+      <button class="tb-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+
+      <!-- User display -->
+      <div class="topbar-user" id="topbar-user-display" onclick="nav('settings')" title="Account settings">
+        <!-- Populated by updateTopbarUser() -->
+      </div>
+
+      <!-- Sign out -->
+      <button class="tb-btn" onclick="authLogout()" title="Sign out" style="color:var(--muted)">⏻</button>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-wrap">
+      <div class="page active" id="page-dashboard"></div>
+      <div class="page" id="page-clients"></div>
+      <div class="page" id="page-leads"></div>
+      <div class="page" id="page-projects"></div>
+      <div class="page" id="page-tasks"></div>
+      <div class="page" id="page-invoices"></div>
+      <div class="page" id="page-quotes"></div>
+      <div class="page" id="page-time"></div>
+      <div class="page" id="page-expenses"></div>
+      <div class="page" id="page-reports"></div>
+      <div class="page" id="page-calendar"></div>
+      <div class="page" id="page-settings"></div>
+      <div class="page" id="page-team"></div>
+      <div class="page" id="page-audit"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- Toast notifications -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- Modal mount -->
+<div id="modal-root"></div>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT — load order is critical
+══════════════════════════════════════ -->
+
+<!-- 1. Formatting helpers (no dependencies) -->
+<script src="js/format.js"></script>
+
+<!-- 2. Auth system (depends on format.js) -->
+<script src="js/auth.js"></script>
+
+<!-- 3. Auth UI (depends on auth.js) -->
+<script src="js/auth-ui.js"></script>
+
+<!-- 4. Core UI utilities (depends on format.js + auth.js) -->
+<script src="js/ui.js"></script>
+
+<!-- 5. Dashboard page -->
+<script src="js/dashboard.js"></script>
+
+<!-- 6. CRM pages -->
+<script src="js/clients.js"></script>
+<script src="js/leads.js"></script>
+<script src="js/projects.js"></script>
+<script src="js/tasks.js"></script>
+
+<!-- 7. Finance pages -->
+<script src="js/time.js"></script>
+<script src="js/invoices.js"></script>
+<script src="js/quotes.js"></script>
+<script src="js/expenses.js"></script>
+
+<!-- 8. Insights pages -->
+<script src="js/reports.js"></script>
+<script src="js/calendar.js"></script>
+
+<!-- 9. System pages -->
+<script src="js/team.js"></script>
+<script src="js/settings.js"></script>
+
+<!-- 10. App bootstrap — RUNS LAST, starts auth check -->
+<script src="js/init.js"></script>
+
+</body>
+</html>
