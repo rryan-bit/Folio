@@ -1,0 +1,2420 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Folio — Freelance Business OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   FOLIO DESIGN SYSTEM
+═══════════════════════════════════════ */
+:root {
+  --bg:          #f4f2ee;
+  --bg2:         #ede9e3;
+  --surface:     #ffffff;
+  --surface2:    #f9f8f6;
+  --surface3:    #f0ede8;
+  --border:      #e5e0d9;
+  --border2:     #d4cfc6;
+  --text:        #1a1814;
+  --text2:       #4a453e;
+  --muted:       #9a9188;
+  --sidebar:     #14120e;
+  --sidebar2:    #1f1d18;
+  --s-text:      rgba(255,255,255,.65);
+  --s-active:    rgba(255,255,255,.1);
+  --s-border:    rgba(255,255,255,.07);
+  --accent:      #2d5be3;
+  --accent-h:    #1e47cc;
+  --accent-l:    #eef2fd;
+  --accent-b:    #c7d5f8;
+  --teal:        #0d9488;
+  --teal-l:      #f0fdfa;
+  --green:       #16a34a;
+  --green-l:     #f0fdf4;
+  --green-b:     #bbf7d0;
+  --orange:      #ea580c;
+  --orange-l:    #fff7ed;
+  --orange-b:    #fed7aa;
+  --red:         #dc2626;
+  --red-l:       #fef2f2;
+  --red-b:       #fecaca;
+  --purple:      #7c3aed;
+  --purple-l:    #f5f3ff;
+  --purple-b:    #ddd6fe;
+  --amber:       #d97706;
+  --amber-l:     #fffbeb;
+  --amber-b:     #fde68a;
+  --sidebar-w:   238px;
+  --topbar-h:    54px;
+  --r:           10px;
+  --r-lg:        14px;
+  --r-sm:        6px;
+  --shadow:      0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg:   0 20px 48px rgba(0,0,0,.12),0 8px 20px rgba(0,0,0,.06);
+}
+[data-theme=dark] {
+  --bg:#0f0e0c; --bg2:#141310; --surface:#1a1916; --surface2:#201e1b;
+  --surface3:#272420; --border:#2c2924; --border2:#3d3a34;
+  --text:#f0ece4; --text2:#b8b0a4; --muted:#6b6358;
+  --sidebar:#0a0908; --sidebar2:#141210;
+  --accent-l:#1a2f6b; --accent-b:#1e3a8a;
+  --teal-l:#022c22; --green-l:#052e16; --green-b:#14532d;
+  --orange-l:#431407; --orange-b:#7c2d12;
+  --red-l:#450a0a; --red-b:#7f1d1d;
+  --purple-l:#2e1065; --purple-b:#4c1d95;
+  --amber-l:#1c1200; --amber-b:#78350f;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13.5px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif}
+
+/* LAYOUT */
+#app{display:flex;height:100vh;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);background:var(--sidebar);
+  display:flex;flex-direction:column;flex-shrink:0;
+  overflow-y:auto;overflow-x:hidden;scrollbar-width:none;
+  position:relative;z-index:40;
+  transition:width .22s ease;
+}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar-logo{
+  padding:18px 16px 14px;
+  border-bottom:1px solid var(--s-border);
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+}
+.logo-mark{
+  width:34px;height:34px;border-radius:9px;flex-shrink:0;
+  background:linear-gradient(135deg,#2d5be3,#7c3aed);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;
+  box-shadow:0 4px 12px rgba(45,91,227,.4);
+}
+.logo-text{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.06em;margin-top:1px}
+
+.nav-section-label{
+  font-size:9.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;color:rgba(255,255,255,.2);
+  padding:12px 14px 4px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;margin:1px 8px;border-radius:7px;
+  color:var(--s-text);font-size:13px;font-weight:500;
+  cursor:pointer;user-select:none;
+  transition:background .12s,color .12s;
+  white-space:nowrap;position:relative;
+}
+.nav-item:hover{background:var(--s-active);color:rgba(255,255,255,.9)}
+.nav-item.active{background:rgba(45,91,227,.3);color:#fff}
+.nav-item.active .nav-icon{color:#7aa4ff}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;
+  font-size:10px;font-weight:700;
+  padding:1px 6px;border-radius:99px;min-width:18px;text-align:center;
+}
+.sidebar-bottom{
+  margin-top:auto;padding:10px 8px;
+  border-top:1px solid var(--s-border);flex-shrink:0;
+}
+.sidebar-user{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;border-radius:7px;cursor:pointer;
+}
+.sidebar-user:hover{background:var(--s-active)}
+.u-av{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#2d5be3,#7c3aed);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;
+}
+.u-name{font-size:12px;font-weight:700;color:rgba(255,255,255,.85)}
+.u-role{font-size:10px;color:rgba(255,255,255,.3)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* TOPBAR */
+.topbar{
+  height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 20px;gap:10px;
+  flex-shrink:0;position:relative;z-index:30;
+}
+.topbar-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.tb-spacer{flex:1}
+.search-wrap{
+  display:flex;align-items:center;gap:7px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:5px 10px;
+  width:210px;transition:width .2s,border-color .15s;cursor:text;
+}
+.search-wrap:focus-within{width:260px;border-color:var(--accent)}
+.search-wrap input{background:none;border:none;outline:none;font-size:12.5px;color:var(--text);width:100%}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-ic{color:var(--muted);font-size:13px}
+.kbd{font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--surface3);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;color:var(--muted)}
+.tb-btn{
+  width:32px;height:32px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--text2);transition:all .15s;position:relative;
+}
+.tb-btn:hover{background:var(--surface3);border-color:var(--border2)}
+.tb-dot{position:absolute;top:5px;right:5px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--surface)}
+
+/* PAGE CONTENT */
+.page-wrap{flex:1;overflow-y:auto;overflow-x:hidden;padding:22px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+.page-wrap::-webkit-scrollbar{width:5px}
+.page-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.page{display:none}
+.page.active{display:block;animation:fadeUp .18s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:14px;flex-wrap:wrap}
+.ph-left h1{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;letter-spacing:-.03em;line-height:1.1}
+.ph-left p{font-size:12.5px;color:var(--muted);margin-top:3px}
+.ph-right{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:var(--r-sm);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;font-weight:600;padding:7px 14px;transition:all .14s;white-space:nowrap;line-height:1.4}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(45,91,227,.3)}
+.btn-primary:hover{background:var(--accent-h);transform:translateY(-1px);box-shadow:0 4px 12px rgba(45,91,227,.3)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface2);border-color:var(--border2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid transparent}
+.btn-ghost:hover{background:var(--surface2);border-color:var(--border)}
+.btn-danger{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
+.btn-danger:hover{background:var(--red-b)}
+.btn-success{background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
+.btn-success:hover{background:var(--green-b)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn-icon{padding:7px;width:32px;height:32px}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.card-hd{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-title{font-family:'Syne',sans-serif;font-size:13.5px;font-weight:700;letter-spacing:-.01em}
+.card-sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+.card-body{padding:18px}
+.card-body.p0{padding:0}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:box-shadow .15s}
+.stat:hover{box-shadow:var(--shadow-md)}
+.stat::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--purple));opacity:0;transition:opacity .2s}
+.stat:hover::after{opacity:1}
+.stat-ic{position:absolute;right:14px;top:14px;font-size:22px;opacity:.1}
+.stat-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:7px}
+.stat-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.stat-val.g{color:var(--green)}.stat-val.o{color:var(--orange)}.stat-val.r{color:var(--red)}.stat-val.b{color:var(--accent)}.stat-val.p{color:var(--purple)}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:5px;display:flex;align-items:center;gap:3px}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* TABLES */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r-lg)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{border-bottom:1px solid var(--border)}
+th{text-align:left;padding:9px 13px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);white-space:nowrap}
+td{padding:11px 13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .1s}
+tbody tr:hover td{background:var(--surface2)}
+.td-bold{font-weight:700}
+.td-muted{color:var(--muted);font-size:12px}
+.td-mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap}
+.bdot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.b-blue{background:var(--accent-l);color:var(--accent);border:1px solid var(--accent-b)}
+.b-green{background:var(--green-l);color:var(--green);border:1px solid var(--green-b)}
+.b-orange{background:var(--orange-l);color:var(--orange);border:1px solid var(--orange-b)}
+.b-red{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
+.b-purple{background:var(--purple-l);color:var(--purple);border:1px solid var(--purple-b)}
+.b-amber{background:var(--amber-l);color:var(--amber);border:1px solid var(--amber-b)}
+.b-gray{background:var(--surface3);color:var(--muted);border:1px solid var(--border2)}
+.b-teal{background:var(--teal-l);color:var(--teal);border:1px solid #99f6e4}
+
+/* FORMS */
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label,.form-label{font-size:12px;font-weight:600;color:var(--text2)}
+.req{color:var(--red);margin-left:2px}
+.fc{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;padding:7px 10px;outline:none;transition:border-color .14s,box-shadow .14s;width:100%}
+.fc:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,91,227,.08)}
+.fc::placeholder{color:var(--muted)}
+textarea.fc{resize:vertical;min-height:78px}
+select.fc{cursor:pointer}
+.form-hint{font-size:11px;color:var(--muted)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.fgrid.c1{grid-template-columns:1fr}
+.fgrid.c3{grid-template-columns:1fr 1fr 1fr}
+.fgrid.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+.fg.s2{grid-column:span 2}.fg.s3{grid-column:span 3}.fg.s4{grid-column:span 4}
+.fdivider{grid-column:1/-1;border:none;border-top:1px solid var(--border);margin:4px 0}
+
+/* MODALS */
+.modal-ov{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:16px;
+  animation:fadeIn .13s ease;
+}
+.modal{
+  background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);
+  width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+  animation:slideUp .18s ease;
+}
+.modal.xl{max-width:800px}.modal.sm{max-width:420px}.modal.lg{max-width:680px}
+.modal-hd{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;background:var(--surface);z-index:1;border-radius:var(--r-lg) var(--r-lg) 0 0;
+}
+.modal-hd h2{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;letter-spacing:-.02em}
+.modal-close{
+  width:26px;height:26px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:var(--muted);transition:all .14s;
+}
+.modal-close:hover{background:var(--red-l);color:var(--red);border-color:var(--red-b)}
+.modal-body{padding:20px}
+.modal-ft{
+  padding:13px 20px;border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:7px;
+  position:sticky;bottom:0;background:var(--surface);
+  border-radius:0 0 var(--r-lg) var(--r-lg);
+}
+
+/* FILTERS */
+.filters{display:flex;align-items:center;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.fsearch{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:5px 10px;flex:1;min-width:160px;max-width:270px}
+.fsearch input{background:none;border:none;outline:none;font-size:12.5px;color:var(--text);width:100%}
+.fsearch input::placeholder{color:var(--muted)}
+.fsel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 9px;font-size:12.5px;color:var(--text);cursor:pointer;outline:none}
+.fsel:focus{border-color:var(--accent)}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-ic{font-size:36px;margin-bottom:10px;opacity:.35}
+.empty h3{font-size:14.5px;font-weight:700;color:var(--text2);margin-bottom:5px}
+.empty p{font-size:12.5px;line-height:1.6;max-width:300px;margin:0 auto 14px}
+
+/* TOAST */
+.toast-wrap{position:fixed;bottom:22px;right:22px;z-index:999;display:flex;flex-direction:column;gap:7px}
+.toast{
+  background:var(--text);color:var(--bg);padding:10px 15px;border-radius:var(--r);
+  font-size:12.5px;font-weight:500;box-shadow:var(--shadow-lg);
+  animation:slideUp .18s ease;display:flex;align-items:center;gap:8px;max-width:300px;
+}
+.toast.s{background:var(--green)}.toast.e{background:var(--red)}.toast.w{background:var(--orange)}
+
+/* PROGRESS */
+.prog{height:5px;background:var(--surface3);border-radius:99px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;background:var(--accent);transition:width .4s ease}
+.prog-fill.g{background:var(--green)}.prog-fill.o{background:var(--orange)}.prog-fill.r{background:var(--red)}
+
+/* AVATAR */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
+.av-sm{width:26px;height:26px;font-size:10px}
+.av-md{width:34px;height:34px;font-size:13px}
+.av-lg{width:44px;height:44px;font-size:17px}
+
+/* LINE ITEMS */
+.li-wrap{border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.li-wrap table thead tr{background:var(--surface2)}
+.li-wrap td input{background:transparent;border:1px solid transparent;border-radius:4px;padding:4px 6px;font-size:12.5px;color:var(--text);width:100%;outline:none;font-family:'Plus Jakarta Sans',sans-serif}
+.li-wrap td input:focus{border-color:var(--accent);background:var(--surface)}
+.inv-totals{display:flex;flex-direction:column;align-items:flex-end;gap:4px;margin-top:10px}
+.tot-row{display:flex;gap:20px;justify-content:flex-end;font-size:12.5px}
+.tot-row .tl{color:var(--muted);min-width:85px;text-align:right}
+.tot-row .tv{min-width:95px;text-align:right;font-weight:600;font-family:'JetBrains Mono',monospace}
+.tot-row.grand{font-size:14.5px;font-weight:800}
+.tot-row.grand .tv{color:var(--accent)}
+
+/* KANBAN */
+.kanban{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px}
+.kb-col{min-width:230px;max-width:248px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px;flex-shrink:0}
+.kb-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kb-title{font-size:12.5px;font-weight:700}
+.kb-count{font-size:10.5px;background:var(--surface3);border:1px solid var(--border);border-radius:99px;padding:1px 7px;color:var(--muted);font-weight:600}
+.kb-cards{display:flex;flex-direction:column;gap:7px;min-height:36px}
+.kb-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:11px;cursor:grab;transition:box-shadow .14s,transform .14s;box-shadow:var(--shadow)}
+.kb-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.kb-card.dragging{opacity:.45}
+.kb-ct{font-size:12.5px;font-weight:600;margin-bottom:5px}
+.kb-meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+
+/* CHART */
+.chart-bars{display:flex;align-items:flex-end;gap:5px;height:130px;padding:0 4px}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;background:var(--accent-l);border:1px solid var(--accent-b);min-height:3px;transition:height .4s;cursor:pointer}
+.chart-bar.cur{background:var(--accent);border-color:var(--accent)}
+.chart-bar.exp{background:var(--red-l);border-color:var(--red-b)}
+.chart-lbl{font-size:10px;color:var(--muted);white-space:nowrap}
+
+/* TABS */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.tab{padding:7px 13px;font-size:12.5px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .14s,border-color .14s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ACTIVITY */
+.act-item{display:flex;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+.act-ic{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:var(--surface2)}
+.act-txt{flex:1;font-size:12.5px}
+.act-time{font-size:11px;color:var(--muted);white-space:nowrap}
+
+/* QUICK ACTIONS */
+.qa-grid{display:flex;gap:7px;flex-wrap:wrap}
+.qa{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);cursor:pointer;font-size:12.5px;font-weight:600;transition:all .14s;color:var(--text)}
+.qa:hover{background:var(--accent-l);border-color:var(--accent-b);color:var(--accent)}
+
+/* COMMAND PALETTE */
+.cmd-ov{position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding-top:80px;animation:fadeIn .1s ease}
+.cmd{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-lg);width:100%;max-width:540px;overflow:hidden;animation:slideUp .14s ease}
+.cmd-s{display:flex;align-items:center;gap:9px;padding:13px 15px;border-bottom:1px solid var(--border)}
+.cmd-s input{flex:1;background:none;border:none;outline:none;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text)}
+.cmd-res{max-height:350px;overflow-y:auto}
+.cmd-sec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);padding:9px 15px 4px}
+.cmd-item{display:flex;align-items:center;gap:9px;padding:8px 15px;cursor:pointer;transition:background .1s}
+.cmd-item:hover,.cmd-item.sel{background:var(--accent-l)}
+.cmd-ic{font-size:14px;width:19px;text-align:center;color:var(--muted)}
+.cmd-it{flex:1}.cmd-it-t{font-size:12.5px;font-weight:600}.cmd-it-s{font-size:11px;color:var(--muted)}
+
+/* TIMER */
+.timer-w{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
+.timer-d{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;letter-spacing:.04em}
+.timer-running .timer-d{color:var(--green);animation:pulse 2s ease infinite}
+
+/* ALERTS */
+.alert{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:var(--r);font-size:12.5px;margin-bottom:14px}
+.alert-warn{background:var(--amber-l);border:1px solid var(--amber-b);color:var(--amber)}
+.alert-err{background:var(--red-l);border:1px solid var(--red-b);color:var(--red)}
+.alert-info{background:var(--accent-l);border:1px solid var(--accent-b);color:var(--accent)}
+.alert-success{background:var(--green-l);border:1px solid var(--green-b);color:var(--green)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.mb4{margin-bottom:16px}.mb3{margin-bottom:12px}.mb2{margin-bottom:8px}
+.flex{display:flex}.flex-col{display:flex;flex-direction:column}
+.items-c{align-items:center}.jc-b{justify-content:space-between}
+.gap1{gap:4px}.gap2{gap:8px}.gap3{gap:12px}
+.fw7{font-weight:700}.fw6{font-weight:600}.fs12{font-size:12px}.fs11{font-size:11px}
+.tc-g{color:var(--green)}.tc-r{color:var(--red)}.tc-o{color:var(--orange)}.tc-b{color:var(--accent)}.tc-m{color:var(--muted)}
+.mono{font-family:'JetBrains Mono',monospace}
+.w-full{width:100%}
+
+/* SECTION DIVIDER */
+.sec-div{border:none;border-top:1px solid var(--border);margin:14px 0}
+
+/* CALENDAR */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dh{text-align:center;font-size:10.5px;font-weight:700;color:var(--muted);padding:4px}
+.cal-day{min-height:76px;border:1px solid var(--border);border-radius:6px;padding:4px;background:var(--surface)}
+.cal-day.today{background:var(--accent-l);border-color:var(--accent-b)}
+.cal-day.other{background:var(--surface2);opacity:.6}
+.cal-dn{font-size:11.5px;font-weight:700;margin-bottom:3px}
+.cal-ev{font-size:10px;border-radius:3px;padding:1px 4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TIMELINE */
+.tl-item{display:flex;gap:10px}
+.tl-line{display:flex;flex-direction:column;align-items:center;width:18px;flex-shrink:0}
+.tl-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);border:2px solid var(--surface);box-shadow:0 0 0 2px var(--accent);flex-shrink:0;margin-top:3px}
+.tl-dot.g{background:var(--green);box-shadow:0 0 0 2px var(--green)}
+.tl-dot.gray{background:var(--muted);box-shadow:0 0 0 2px var(--muted)}
+.tl-con{flex:1;width:1px;background:var(--border);margin:3px 0}
+.tl-ct{flex:1;padding-bottom:14px}
+.tl-t{font-size:12.5px;font-weight:600}.tl-m{font-size:11.5px;color:var(--muted);margin-top:2px}
+
+/* DROPDOWN */
+.dd{position:relative;display:inline-block}
+.dd-menu{position:absolute;right:0;top:calc(100% + 4px);background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow-md);min-width:150px;z-index:100;animation:fadeIn .1s ease;overflow:hidden}
+.dd-item{display:flex;align-items:center;gap:8px;padding:7px 13px;font-size:12.5px;cursor:pointer;transition:background .1s;color:var(--text)}
+.dd-item:hover{background:var(--surface2)}
+.dd-item.danger{color:var(--red)}.dd-item.danger:hover{background:var(--red-l)}
+.dd-divider{border:none;border-top:1px solid var(--border);margin:3px 0}
+
+/* SETTINGS ROW */
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-lbl{font-size:13px;font-weight:600}
+.setting-desc{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* TOGGLE */
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-s{position:absolute;cursor:pointer;inset:0;background:var(--border2);border-radius:99px;transition:background .2s}
+.toggle-s::before{content:'';position:absolute;width:16px;height:16px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle input:checked ~ .toggle-s{background:var(--accent)}
+.toggle input:checked ~ .toggle-s::before{transform:translateX(18px)}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.stat-grid{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){:root{--sidebar-w:0px}.sidebar{position:fixed;width:238px;transform:translateX(-100%);transition:transform .22s ease}.sidebar.open{transform:translateX(0)}.stat-grid{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}.page-wrap{padding:14px}}
+@media(max-width:600px){.fgrid{grid-template-columns:1fr}.fg.s2,.fg.s3,.fg.s4{grid-column:span 1}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">F</div>
+    <div>
+      <div class="logo-text" id="logo-biz">Folio</div>
+      <div class="logo-sub">FREELANCE OS</div>
+    </div>
+  </div>
+
+  <nav id="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" data-page="dashboard" onclick="nav('dashboard',this)">
+      <span class="nav-icon">⬡</span> Dashboard
+    </div>
+    <div class="nav-section-label">Work</div>
+    <div class="nav-item" data-page="clients" onclick="nav('clients',this)">
+      <span class="nav-icon">👥</span> Clients
+    </div>
+    <div class="nav-item" data-page="leads" onclick="nav('leads',this)">
+      <span class="nav-icon">🎯</span> Pipeline
+    </div>
+    <div class="nav-item" data-page="projects" onclick="nav('projects',this)">
+      <span class="nav-icon">📁</span> Projects
+    </div>
+    <div class="nav-item" data-page="tasks" onclick="nav('tasks',this)">
+      <span class="nav-icon">✅</span> Tasks
+      <span class="nav-badge" id="tasks-badge" style="display:none">0</span>
+    </div>
+    <div class="nav-section-label">Finance</div>
+    <div class="nav-item" data-page="invoices" onclick="nav('invoices',this)">
+      <span class="nav-icon">📄</span> Invoices
+      <span class="nav-badge" id="inv-badge" style="display:none">0</span>
+    </div>
+    <div class="nav-item" data-page="quotes" onclick="nav('quotes',this)">
+      <span class="nav-icon">📋</span> Quotes
+    </div>
+    <div class="nav-item" data-page="time" onclick="nav('time',this)">
+      <span class="nav-icon">⏱</span> Time
+    </div>
+    <div class="nav-item" data-page="expenses" onclick="nav('expenses',this)">
+      <span class="nav-icon">💸</span> Expenses
+    </div>
+    <div class="nav-section-label">Insights</div>
+    <div class="nav-item" data-page="reports" onclick="nav('reports',this)">
+      <span class="nav-icon">📊</span> Reports
+    </div>
+    <div class="nav-item" data-page="calendar" onclick="nav('calendar',this)">
+      <span class="nav-icon">📅</span> Calendar
+    </div>
+    <div class="nav-section-label">System</div>
+    <div class="nav-item" data-page="settings" onclick="nav('settings',this)">
+      <span class="nav-icon">⚙️</span> Settings
+    </div>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user" onclick="nav('settings')">
+      <div class="u-av" id="sidebar-av">AM</div>
+      <div>
+        <div class="u-name" id="sidebar-uname">Alex Morgan</div>
+        <div class="u-role" id="sidebar-biz">Folio Studio</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <button class="tb-btn" id="menu-btn" onclick="toggleSidebar()" style="display:none">☰</button>
+    <div class="topbar-title" id="topbar-title">Dashboard</div>
+    <div class="tb-spacer"></div>
+    <div class="search-wrap" onclick="openCmd()">
+      <span class="search-ic">🔍</span>
+      <input type="text" placeholder="Search…" readonly style="cursor:pointer"/>
+      <span class="kbd">⌘K</span>
+    </div>
+    <button class="tb-btn" onclick="openCmd()" title="Command palette">⌘</button>
+    <button class="tb-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+    <button class="tb-btn" onclick="nav('settings')" title="Settings">⚙️</button>
+  </div>
+
+  <!-- PAGES -->
+  <div class="page-wrap">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard"></div>
+
+    <!-- CLIENTS -->
+    <div class="page" id="page-clients"></div>
+
+    <!-- LEADS / PIPELINE -->
+    <div class="page" id="page-leads"></div>
+
+    <!-- PROJECTS -->
+    <div class="page" id="page-projects"></div>
+
+    <!-- TASKS -->
+    <div class="page" id="page-tasks"></div>
+
+    <!-- INVOICES -->
+    <div class="page" id="page-invoices"></div>
+
+    <!-- QUOTES -->
+    <div class="page" id="page-quotes"></div>
+
+    <!-- TIME TRACKING -->
+    <div class="page" id="page-time"></div>
+
+    <!-- EXPENSES -->
+    <div class="page" id="page-expenses"></div>
+
+    <!-- REPORTS -->
+    <div class="page" id="page-reports"></div>
+
+    <!-- CALENDAR -->
+    <div class="page" id="page-calendar"></div>
+
+    <!-- SETTINGS -->
+    <div class="page" id="page-settings"></div>
+
+  </div><!-- /page-wrap -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<!-- MODAL CONTAINER -->
+<div id="modal-root"></div>
+<script>
+// ═══════════════════════════════════════════════════════
+// FOLIO — DATA MODEL, STATE & HELPERS
+// ═══════════════════════════════════════════════════════
+
+const DB = 'folio_v4';
+let S = {}; // global state
+
+const DEF_SETTINGS = {
+  bizName:'Folio Studio', ownerName:'Alex Morgan', email:'alex@foliostudio.com',
+  phone:'+61 400 123 456', website:'foliostudio.com', abn:'12 345 678 901',
+  address:'42 Collins St, Melbourne VIC 3000',
+  bankName:'Commonwealth Bank', bsb:'063-000', accountNo:'12345678',
+  paymentDetails:'BSB: 063-000\nAccount: 12345678\nAccount Name: Folio Studio',
+  taxRate:10, payTerms:14, currency:'AUD', sym:'$',
+  invPrefix:'INV', quotePrefix:'QUO', nextInv:8, nextQuote:5,
+  theme:'light'
+};
+
+function uid(){return '_'+Math.random().toString(36).slice(2,8)}
+function today(){return new Date().toISOString().slice(0,10)}
+function addDays(d,n){const dt=new Date(d+'T00:00:00');dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10)}
+function subMonths(n){const d=new Date();d.setMonth(d.getMonth()-n);return d.toISOString().slice(0,10)}
+function fmtDate(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'})}
+function fmtShort(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-AU',{day:'numeric',month:'short'})}
+function fmtMon(d){if(!d)return'—';return new Date(d+'T00:00:00').toLocaleDateString('en-AU',{month:'short',year:'numeric'})}
+function fmtMonKey(offset){const d=new Date();d.setMonth(d.getMonth()-offset);return d.toISOString().slice(0,7)}
+function fmtMonLabel(key){const d=new Date(key+'-01');return d.toLocaleDateString('en-AU',{month:'short'})}
+function money(n,sym){sym=sym||S.settings?.sym||'$';return sym+parseFloat(n||0).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function moneyK(n){n=parseFloat(n||0);if(n>=100000)return'$'+(n/1000).toFixed(0)+'k';if(n>=10000)return'$'+(n/1000).toFixed(1)+'k';return money(n)}
+function fmtMins(m){const h=Math.floor(m/60),mm=m%60;return h>0?`${h}h${mm>0?' '+mm+'m':''}`:`${mm}m`}
+function fmtSecs(s){const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`}
+function isOver(d){return d&&d<today()}
+function clientName(id){const c=S.clients?.find(c=>c.id===id);return c?c.name:'—'}
+function projName(id){const p=S.projects?.find(p=>p.id===id);return p?p.name:'—'}
+function initials(n){if(!n)return'?';return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+function avColor(s){const c=['#2d5be3','#7c3aed','#16a34a','#ea580c','#dc2626','#0891b2','#b45309','#be185d'];let h=0;for(let i=0;i<(s||'').length;i++)h=s.charCodeAt(i)+((h<<5)-h);return c[Math.abs(h)%c.length]}
+function avEl(name,size='sm'){return`<div class="av av-${size}" style="background:${avColor(name)}">${initials(name)}</div>`}
+
+function calcInv(inv){
+  const sub=(inv.items||[]).reduce((s,i)=>s+(parseFloat(i.qty)||0)*(parseFloat(i.rate)||0),0);
+  const disc=sub*((parseFloat(inv.discount)||0)/100);
+  const after=sub-disc;
+  const tax=after*((parseFloat(inv.taxRate)||0)/100);
+  const total=after+tax;
+  const paid=(inv.payments||[]).reduce((s,p)=>s+(parseFloat(p.amount)||0),0);
+  return{sub,disc,after,tax,total,paid,balance:total-paid};
+}
+function invStatus(inv){
+  if(inv.status==='paid')return'paid';
+  if(inv.status==='cancelled')return'cancelled';
+  if(inv.status==='draft')return'draft';
+  if(isOver(inv.due))return'overdue';
+  return inv.status||'unpaid';
+}
+function statusBadge(st){
+  const map={paid:'b-green',sent:'b-blue',unpaid:'b-orange',overdue:'b-red',draft:'b-gray',cancelled:'b-gray',accepted:'b-teal',declined:'b-red',expired:'b-amber',active:'b-blue',complete:'b-green',paused:'b-gray',won:'b-teal',lost:'b-red',new:'b-gray',contacted:'b-blue',proposal:'b-orange',negotiation:'b-purple'};
+  return`<span class="badge ${map[st]||'b-gray'}">${st}</span>`;
+}
+function priorityBadge(p){const m={high:'b-red',medium:'b-orange',low:'b-gray'};return`<span class="badge ${m[p]||'b-gray'}">${p||'medium'}</span>`}
+
+// ── PERSISTENCE ──
+function loadState(){
+  try{
+    const raw=localStorage.getItem(DB);
+    if(raw){S={...JSON.parse(raw)};S.settings={...DEF_SETTINGS,...S.settings};}
+    else{S={settings:{...DEF_SETTINGS},...getSample()};saveState();}
+  }catch(e){S={settings:{...DEF_SETTINGS},...getSample()};}
+  if(!S.timer)S.timer={running:false,startedAt:null,secs:0,projectId:null,clientId:null,desc:''};
+}
+function saveState(){try{const t={...S};delete t.timer;localStorage.setItem(DB,JSON.stringify(t));}catch(e){}}
+
+// ── ACTIVITY ──
+function logAct(type,action,entity,id,icon){
+  if(!S.activity)S.activity=[];
+  S.activity.unshift({id:uid(),type,action,entity,entityId:id,date:today(),icon:icon||'📌'});
+  if(S.activity.length>60)S.activity=S.activity.slice(0,60);
+}
+
+// ── TOAST ──
+function toast(msg,type=''){
+  const el=document.createElement('div');
+  el.className=`toast${type?' '+type:''}`;
+  const icons={s:'✓',e:'✕',w:'⚠','':'ℹ'};
+  el.innerHTML=`<span>${icons[type]||'ℹ'}</span> ${msg}`;
+  document.getElementById('toast-wrap').appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity .3s';setTimeout(()=>el.remove(),300)},2800);
+}
+
+// ── MODALS ──
+function showModal(html){
+  const root=document.getElementById('modal-root');
+  root.innerHTML=html;
+  root.querySelector('.modal-ov')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+}
+function closeModal(){document.getElementById('modal-root').innerHTML=''}
+
+// ── CONFIRM ──
+function confirm2(msg,cb){if(confirm(msg))cb()}
+
+// ── SAMPLE DATA ──
+function getSample(){
+  const t=today();
+  const d=(n)=>addDays(t,n);
+  const m=(n)=>subMonths(-n).slice(0,10); // won't work — use direct
+  // offset from today
+  const dt=(n)=>{const x=new Date(t);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+  const mo=(n)=>{const x=new Date(t);x.setMonth(x.getMonth()+n);return x.toISOString().slice(0,10)};
+
+  const clients=[
+    {id:'c1',name:'Apex Digital',company:'Apex Digital Pty Ltd',email:'sarah@apexdigital.com',phone:'+61 400 001 001',website:'apexdigital.com',address:'1 Tech Park, Sydney NSW 2000',currency:'AUD',abn:'11 111 111 111',notes:'Long-term retainer client. Always pays on time.',tags:['agency','tech'],status:'active',createdAt:mo(-8)},
+    {id:'c2',name:'Nova Brands',company:'Nova Brands International',email:'mike@novabrands.com',phone:'+61 400 002 002',website:'novabrands.com',address:'8 Brand Ave, Melbourne VIC 3000',currency:'AUD',abn:'',notes:'Requires NDA. Slow approvals.',tags:['brand','marketing'],status:'active',createdAt:mo(-6)},
+    {id:'c3',name:'Stellar Labs',company:'Stellar Labs Inc',email:'jane@stellarlabs.io',phone:'+1 555 003 003',website:'stellarlabs.io',address:'100 Innovation Dr, San Francisco CA',currency:'USD',abn:'',notes:'US startup. Fast-moving team.',tags:['startup','tech'],status:'active',createdAt:mo(-4)},
+    {id:'c4',name:'Green Earth Co',company:'Green Earth Co',email:'tom@greenearth.co',phone:'+61 400 004 004',website:'greenearth.co',address:'22 Eco Lane, Brisbane QLD 4000',currency:'AUD',abn:'',notes:'Sustainability brand. Careful with messaging.',tags:['ecommerce'],status:'active',createdAt:mo(-3)},
+    {id:'c5',name:'Flux Agency',company:'Flux Creative Agency',email:'lisa@fluxagency.com',phone:'+61 400 005 005',website:'fluxagency.com',address:'5 Design St, Adelaide SA 5000',currency:'AUD',abn:'',notes:'Monthly retainer. Referred by Apex.',tags:['agency'],status:'inactive',createdAt:mo(-12)},
+  ];
+
+  const leads=[
+    {id:'l1',name:'James Wilson',company:'PulseMedia',email:'j.wilson@pulse.com',phone:'+61 400 100 001',value:12000,source:'Referral',stage:'proposal',prob:70,notes:'Full brand redesign + website.',followUp:dt(3),createdAt:dt(-14)},
+    {id:'l2',name:'Priya Sharma',company:'DataStack',email:'priya@datastack.io',phone:'+1 555 200 002',value:8500,source:'LinkedIn',stage:'contacted',prob:40,notes:'MVP design for SaaS product.',followUp:dt(1),createdAt:dt(-7)},
+    {id:'l3',name:'Carlos Mendez',company:'Viva Foods',email:'carlos@vivafoods.com',phone:'+61 400 300 003',value:5000,source:'Website',stage:'new',prob:20,notes:'Packaging redesign.',followUp:dt(5),createdAt:dt(-3)},
+    {id:'l4',name:'Rachel Kim',company:'FlowHR',email:'r.kim@flowhr.com',phone:'+61 400 400 004',value:18000,source:'Conference',stage:'negotiation',prob:85,notes:'UX audit + design system.',followUp:dt(-1),createdAt:dt(-21)},
+    {id:'l5',name:'Tom Baker',company:'BlueSky Travel',email:'tom@bluesky.travel',phone:'+61 400 500 005',value:7200,source:'Cold Outreach',stage:'won',prob:100,notes:'Won! Converting to project.',followUp:null,createdAt:dt(-30)},
+  ];
+
+  const projects=[
+    {id:'p1',name:'Apex Website Redesign',clientId:'c1',desc:'Full redesign of Apex Digital corporate website.',start:mo(-2),deadline:dt(14),budget:12000,rate:150,status:'active',priority:'high',progress:65,tags:['web','design'],notes:'Client wants minimal aesthetic. Using Webflow.'},
+    {id:'p2',name:'Nova Brand Identity',clientId:'c2',desc:'Complete brand identity system.',start:mo(-1),deadline:dt(21),budget:8500,rate:140,status:'active',priority:'high',progress:40,tags:['branding'],notes:'Phase 1 logo concepts approved.'},
+    {id:'p3',name:'Stellar App UI',clientId:'c3',desc:'UI/UX for Stellar Labs SaaS dashboard.',start:mo(-3),deadline:dt(-7),budget:9800,rate:160,status:'complete',priority:'medium',progress:100,tags:['ui','saas'],notes:'Delivered and signed off.'},
+    {id:'p4',name:'Green Earth Packaging',clientId:'c4',desc:'Eco-friendly packaging design.',start:dt(-7),deadline:dt(30),budget:4500,rate:120,status:'active',priority:'low',progress:20,tags:['packaging'],notes:'Initial concepts in progress.'},
+  ];
+
+  const tasks=[
+    {id:'t1',title:'Homepage wireframes',projectId:'p1',clientId:'c1',desc:'Low-fi wireframes for homepage',priority:'high',status:'done',due:dt(-2),createdAt:dt(-10)},
+    {id:'t2',title:'Mobile responsive review',projectId:'p1',clientId:'c1',desc:'Fix all breakpoints',priority:'high',status:'inprogress',due:dt(2),createdAt:dt(-5)},
+    {id:'t3',title:'Logo concept A & B',projectId:'p2',clientId:'c2',desc:'Two initial logo directions',priority:'high',status:'inprogress',due:dt(3),createdAt:dt(-8)},
+    {id:'t4',title:'Colour palette sign-off',projectId:'p2',clientId:'c2',desc:'Final palette approval',priority:'medium',status:'todo',due:dt(10),createdAt:dt(-3)},
+    {id:'t5',title:'Client feedback review',projectId:'p1',clientId:'c1',desc:'Collate and action feedback',priority:'medium',status:'todo',due:dt(4),createdAt:dt(-2)},
+    {id:'t6',title:'Packaging mock renders',projectId:'p4',clientId:'c4',desc:'3D packaging concepts',priority:'low',status:'todo',due:dt(15),createdAt:dt(-1)},
+    {id:'t7',title:'Follow up INV-004',projectId:null,clientId:'c2',desc:'Chase overdue payment',priority:'high',status:'todo',due:dt(-3),createdAt:dt(-5)},
+  ];
+
+  const timeEntries=[
+    {id:'te1',projectId:'p1',clientId:'c1',desc:'Homepage wireframes',date:dt(-2),duration:180,billable:true,rate:150,billed:true},
+    {id:'te2',projectId:'p1',clientId:'c1',desc:'Mobile responsive fixes',date:dt(-1),duration:240,billable:true,rate:150,billed:false},
+    {id:'te3',projectId:'p2',clientId:'c2',desc:'Logo concept sketching',date:dt(-1),duration:300,billable:true,rate:140,billed:false},
+    {id:'te4',projectId:'p1',clientId:'c1',desc:'Client call - scope review',date:dt(0),duration:60,billable:true,rate:150,billed:false},
+    {id:'te5',projectId:null,clientId:null,desc:'Admin & emails',date:dt(0),duration:90,billable:false,rate:0,billed:false},
+  ];
+
+  const invoices=[
+    {id:'inv1',number:'INV-001',clientId:'c1',projectId:'p1',date:mo(-5),due:mo(-4),status:'paid',notes:'Phase 1 payment.',taxRate:10,discount:0,items:[{id:'li1',desc:'Brand Strategy & Research',qty:1,rate:3500},{id:'li2',desc:'UX Discovery Workshop',qty:2,rate:1200}],payments:[{id:'pay1',amount:5940,date:mo(-4),method:'Bank Transfer',ref:'REF-001'}]},
+    {id:'inv2',number:'INV-002',clientId:'c5',projectId:null,date:mo(-4),due:mo(-3),status:'paid',notes:'Monthly retainer.',taxRate:10,discount:0,items:[{id:'li3',desc:'Monthly Design Retainer',qty:1,rate:4000}],payments:[{id:'pay2',amount:4400,date:mo(-3),method:'Bank Transfer',ref:'REF-002'}]},
+    {id:'inv3',number:'INV-003',clientId:'c3',projectId:'p3',date:mo(-2),due:mo(-1),status:'paid',notes:'Final delivery.',taxRate:0,discount:5,items:[{id:'li4',desc:'UI Design — Full System',qty:1,rate:9800}],payments:[{id:'pay3',amount:9310,date:mo(-1),method:'PayPal',ref:'PP-003'}]},
+    {id:'inv4',number:'INV-004',clientId:'c2',projectId:'p2',date:mo(-1),due:dt(-10),status:'sent',notes:'Phase 1 brand identity.',taxRate:10,discount:0,items:[{id:'li5',desc:'Brand Identity Phase 1',qty:1,rate:4250},{id:'li6',desc:'Logo Design',qty:1,rate:1800}],payments:[]},
+    {id:'inv5',number:'INV-005',clientId:'c1',projectId:'p1',date:dt(-7),due:dt(7),status:'sent',notes:'Phase 2 milestone.',taxRate:10,discount:0,items:[{id:'li7',desc:'Website Design Phase 2',qty:1,rate:6000},{id:'li8',desc:'Content Strategy',qty:3,rate:400}],payments:[]},
+    {id:'inv6',number:'INV-006',clientId:'c4',projectId:'p4',date:dt(-2),due:dt(12),status:'draft',notes:'Initial deposit.',taxRate:10,discount:10,items:[{id:'li9',desc:'Packaging Design Phase 1',qty:1,rate:2250}],payments:[]},
+    {id:'inv7',number:'INV-007',clientId:'c1',projectId:'p1',date:dt(-1),due:dt(13),status:'unpaid',notes:'',taxRate:10,discount:0,items:[{id:'li10',desc:'SEO Consultation',qty:4,rate:200}],payments:[]},
+  ];
+
+  const quotes=[
+    {id:'q1',number:'QUO-001',clientId:'c1',date:mo(-3),expiry:mo(-2),status:'accepted',notes:'Full website package.',taxRate:10,discount:0,items:[{id:'qi1',desc:'Website Redesign Package',qty:1,rate:12000}]},
+    {id:'q2',number:'QUO-002',clientId:'c2',date:mo(-2),expiry:mo(-1),status:'accepted',notes:'Brand identity.',taxRate:10,discount:0,items:[{id:'qi2',desc:'Brand Identity System',qty:1,rate:8500}]},
+    {id:'q3',number:'QUO-003',clientId:null,leadId:'l1',date:dt(-5),expiry:dt(25),status:'sent',notes:'Rebrand + web proposal.',taxRate:10,discount:5,items:[{id:'qi3',desc:'Brand Strategy',qty:1,rate:3500},{id:'qi4',desc:'Web Design',qty:1,rate:8500}]},
+    {id:'q4',number:'QUO-004',clientId:null,leadId:'l4',date:dt(-2),expiry:dt(28),status:'draft',notes:'UX audit + design system.',taxRate:10,discount:0,items:[{id:'qi5',desc:'UX Audit & Report',qty:1,rate:6000},{id:'qi6',desc:'Design System',qty:1,rate:12000}]},
+  ];
+
+  const expenses=[
+    {id:'ex1',desc:'Adobe Creative Cloud',merchant:'Adobe',cat:'Software',amount:89.99,date:mo(-1),tax:9,method:'Credit Card',projectId:null,deductible:true,notes:'Annual sub'},
+    {id:'ex2',desc:'Figma Professional',merchant:'Figma',cat:'Software',amount:45,date:mo(-1),tax:4.5,method:'Credit Card',projectId:null,deductible:true,notes:''},
+    {id:'ex3',desc:'Client lunch — Apex',merchant:'The Butter Restaurant',cat:'Meals',amount:128.50,date:dt(-10),tax:12.85,method:'Credit Card',projectId:'p1',deductible:true,notes:'Kickoff lunch'},
+    {id:'ex4',desc:'Stock photos',merchant:'Unsplash',cat:'Subscriptions',amount:12,date:dt(-5),tax:1.2,method:'Credit Card',projectId:'p2',deductible:true,notes:''},
+    {id:'ex5',desc:'Office supplies',merchant:'Officeworks',cat:'Office',amount:67.40,date:dt(-3),tax:6.74,method:'Debit Card',projectId:null,deductible:true,notes:''},
+    {id:'ex6',desc:'Webflow Team',merchant:'Webflow',cat:'Software',amount:58,date:dt(-2),tax:5.8,method:'Credit Card',projectId:'p1',deductible:true,notes:''},
+    {id:'ex7',desc:'SYD→MEL flight',merchant:'Qantas',cat:'Travel',amount:342,date:dt(-15),tax:34.2,method:'Credit Card',projectId:null,deductible:true,notes:'Client meetings'},
+  ];
+
+  const activity=[
+    {id:'a1',type:'invoice',action:'marked as paid',entity:'INV-003',entityId:'inv3',date:dt(-1),icon:'💰'},
+    {id:'a2',type:'project',action:'created',entity:'Green Earth Packaging',entityId:'p4',date:dt(-7),icon:'📁'},
+    {id:'a3',type:'client',action:'added',entity:'Green Earth Co',entityId:'c4',date:dt(-7),icon:'👤'},
+    {id:'a4',type:'invoice',action:'sent',entity:'INV-005',entityId:'inv5',date:dt(-7),icon:'📄'},
+    {id:'a5',type:'quote',action:'sent',entity:'QUO-003',entityId:'q3',date:dt(-5),icon:'📋'},
+    {id:'a6',type:'task',action:'completed',entity:'Homepage wireframes',entityId:'t1',date:dt(-2),icon:'✅'},
+  ];
+
+  return{clients,leads,projects,tasks,timeEntries,invoices,quotes,expenses,activity};
+}
+
+// ── NAVIGATION ──
+let currentPage='dashboard';
+const pageTitles={dashboard:'Dashboard',clients:'Clients',leads:'Pipeline',projects:'Projects',tasks:'Tasks',invoices:'Invoices',quotes:'Quotes',time:'Time Tracking',expenses:'Expenses',reports:'Reports',calendar:'Calendar',settings:'Settings'};
+
+function nav(page,el){
+  if(currentPage===page)return;
+  currentPage=page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+page)?.classList.add('active');
+  if(el)el.classList.add('active');
+  else document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
+  document.getElementById('topbar-title').textContent=pageTitles[page]||page;
+  render(page);
+}
+
+function render(page){
+  const fns={dashboard:renderDash,clients:renderClients,leads:renderLeads,projects:renderProjects,tasks:renderTasks,invoices:renderInvoices,quotes:renderQuotes,time:renderTime,expenses:renderExpenses,reports:renderReports,calendar:renderCalendar,settings:renderSettings};
+  if(fns[page])fns[page]();
+}
+
+function updateBadges(){
+  const overInv=S.invoices?.filter(i=>invStatus(i)==='overdue').length||0;
+  const overTasks=S.tasks?.filter(t=>t.status!=='done'&&isOver(t.due)).length||0;
+  const ib=document.getElementById('inv-badge');
+  const tb=document.getElementById('tasks-badge');
+  if(ib){ib.textContent=overInv;ib.style.display=overInv>0?'':'none'}
+  if(tb){tb.textContent=overTasks;tb.style.display=overTasks>0?'':'none'}
+}
+
+// ── THEME ──
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  S.settings.theme=t;
+  saveState();
+  const btn=document.getElementById('theme-btn');
+  if(btn)btn.textContent=t==='dark'?'☀️':'🌙';
+}
+function toggleTheme(){setTheme(S.settings.theme==='dark'?'light':'dark')}
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ── BACKUP ──
+function exportBackup(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`folio-backup-${today()}.json`;a.click();
+  toast('Backup exported','s');
+}
+function importBackup(f){
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{try{const d=JSON.parse(e.target.result);Object.assign(S,d);saveState();toast('Backup imported. Reloading…','s');setTimeout(()=>location.reload(),1000);}catch(err){toast('Invalid backup file','e');}};
+  r.readAsText(f);
+}
+function resetApp(){confirm2('Reset ALL data? This cannot be undone.',()=>{localStorage.removeItem(DB);toast('Resetting…','w');setTimeout(()=>location.reload(),800);})}
+
+// ── SIDEBAR UPDATE ──
+function updateSidebar(){
+  const s=S.settings;
+  const ln=document.getElementById('logo-biz');if(ln)ln.textContent=s.bizName||'Folio';
+  const un=document.getElementById('sidebar-uname');if(un)un.textContent=s.ownerName||'Your Name';
+  const ub=document.getElementById('sidebar-biz');if(ub)ub.textContent=s.bizName||'Freelancer';
+  const av=document.getElementById('sidebar-av');if(av){av.textContent=initials(s.ownerName||'?');av.style.background=avColor(s.ownerName||'x')}
+}
+
+// ── COMMAND PALETTE ──
+function openCmd(){
+  const html=`
+  <div class="cmd-ov" id="cmd-ov" onclick="if(event.target===this)closeCmd()">
+    <div class="cmd">
+      <div class="cmd-s">
+        <span style="font-size:16px;color:var(--muted)">⌘</span>
+        <input type="text" placeholder="Search or run a command…" id="cmd-in" oninput="filterCmd(this.value)" autofocus/>
+      </div>
+      <div class="cmd-res" id="cmd-res"></div>
+    </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+  setTimeout(()=>document.getElementById('cmd-in')?.focus(),50);
+  filterCmd('');
+}
+function closeCmd(){document.getElementById('cmd-ov')?.remove()}
+
+function filterCmd(q){
+  const el=document.getElementById('cmd-res');if(!el)return;
+  q=q.toLowerCase();
+  const actions=[
+    {icon:'📄',t:'New Invoice',s:'Create a new invoice',fn:"closeCmd();openInvModal()"},
+    {icon:'👤',t:'New Client',s:'Add a client',fn:"closeCmd();openClientModal()"},
+    {icon:'📁',t:'New Project',s:'Start a project',fn:"closeCmd();openProjModal()"},
+    {icon:'📋',t:'New Quote',s:'Create a quote',fn:"closeCmd();openQuoteModal()"},
+    {icon:'💸',t:'Log Expense',s:'Track an expense',fn:"closeCmd();openExpModal()"},
+    {icon:'⏱',t:'Start Timer',s:'Begin tracking time',fn:"closeCmd();nav('time')"},
+    {icon:'🎯',t:'Add Lead',s:'New pipeline lead',fn:"closeCmd();openLeadModal()"},
+  ];
+  const pages=[
+    {icon:'⬡',t:'Dashboard',fn:"closeCmd();nav('dashboard')"},
+    {icon:'👥',t:'Clients',fn:"closeCmd();nav('clients')"},
+    {icon:'📊',t:'Reports',fn:"closeCmd();nav('reports')"},
+    {icon:'📅',t:'Calendar',fn:"closeCmd();nav('calendar')"},
+    {icon:'⚙️',t:'Settings',fn:"closeCmd();nav('settings')"},
+  ];
+  const filt=items=>items.filter(i=>!q||i.t.toLowerCase().includes(q)||(i.s||'').toLowerCase().includes(q));
+  const clients=q?S.clients?.filter(c=>c.name.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q)).slice(0,3):[];
+  const invs=q?S.invoices?.filter(i=>i.number.toLowerCase().includes(q)||clientName(i.clientId).toLowerCase().includes(q)).slice(0,3):[];
+
+  let html='';
+  const fa=filt(actions);
+  if(fa.length){html+=`<div class="cmd-sec">Quick Actions</div>`;html+=fa.map(a=>`<div class="cmd-item" onclick="${a.fn}"><div class="cmd-ic">${a.icon}</div><div class="cmd-it"><div class="cmd-it-t">${a.t}</div>${a.s?`<div class="cmd-it-s">${a.s}</div>`:''}</div></div>`).join('')}
+  const fp=filt(pages);
+  if(fp.length){html+=`<div class="cmd-sec">Navigate</div>`;html+=fp.map(p=>`<div class="cmd-item" onclick="${p.fn}"><div class="cmd-ic">${p.icon}</div><div class="cmd-it"><div class="cmd-it-t">${p.t}</div></div></div>`).join('')}
+  if(clients?.length){html+=`<div class="cmd-sec">Clients</div>`;html+=clients.map(c=>`<div class="cmd-item" onclick="closeCmd();nav('clients')"><div class="cmd-ic">👤</div><div class="cmd-it"><div class="cmd-it-t">${c.name}</div><div class="cmd-it-s">${c.email||c.company||''}</div></div></div>`).join('')}
+  if(invs?.length){html+=`<div class="cmd-sec">Invoices</div>`;html+=invs.map(i=>`<div class="cmd-item" onclick="closeCmd();nav('invoices')"><div class="cmd-ic">📄</div><div class="cmd-it"><div class="cmd-it-t">${i.number} · ${clientName(i.clientId)}</div><div class="cmd-it-s">${money(calcInv(i).total)} · ${invStatus(i)}</div></div></div>`).join('')}
+  if(!html)html=`<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px">No results for "${q}"</div>`;
+  el.innerHTML=html;
+}
+
+// keyboard shortcut
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openCmd()}
+  if(e.key==='Escape'){closeCmd();closeModal()}
+});
+</script>
+<script>
+// ═══════════════════════════════════════════════════════
+// CLIENTS
+// ═══════════════════════════════════════════════════════
+let clientQ='',clientStatusF='';
+function renderClients(){
+  let list=S.clients||[];
+  if(clientQ)list=list.filter(c=>c.name.toLowerCase().includes(clientQ)||c.email?.toLowerCase().includes(clientQ)||c.company?.toLowerCase().includes(clientQ));
+  if(clientStatusF)list=list.filter(c=>c.status===clientStatusF);
+
+  document.getElementById('page-clients').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Clients</h1><p>${S.clients?.length||0} total · ${S.clients?.filter(c=>c.status==='active').length||0} active</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openClientModal()">+ New Client</button></div>
+  </div>
+  <div class="filters">
+    <div class="fsearch"><span>🔍</span><input placeholder="Search clients…" value="${clientQ}" oninput="clientQ=this.value.toLowerCase();renderClients()"/></div>
+    <select class="fsel" onchange="clientStatusF=this.value;renderClients()">
+      <option value="">All Status</option>
+      <option value="active" ${clientStatusF==='active'?'selected':''}>Active</option>
+      <option value="inactive" ${clientStatusF==='inactive'?'selected':''}>Inactive</option>
+    </select>
+  </div>
+  <div class="card">
+    ${list.length===0?`<div class="empty"><div class="empty-ic">👥</div><h3>No clients yet</h3><p>Add your first client to start managing relationships.</p><button class="btn btn-primary" onclick="openClientModal()">+ Add Client</button></div>`:`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Client</th><th>Email</th><th>Phone</th><th>Lifetime Value</th><th>Invoices</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${list.map(c=>{
+          const cInvs=S.invoices?.filter(i=>i.clientId===c.id)||[];
+          const lv=cInvs.filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0);
+          return`<tr>
+            <td><div class="flex items-c gap2">${avEl(c.name,'sm')}<div><div class="td-bold">${c.name}</div>${c.company?`<div class="td-muted">${c.company}</div>`:''}</div></div></td>
+            <td class="td-muted">${c.email||'—'}</td>
+            <td class="td-muted">${c.phone||'—'}</td>
+            <td class="fw6 tc-g">${money(lv)}</td>
+            <td>${cInvs.length}</td>
+            <td>${statusBadge(c.status||'active')}</td>
+            <td><div class="flex gap1">
+              <button class="btn btn-xs btn-secondary" onclick="openClientModal('${c.id}')">Edit</button>
+              <button class="btn btn-xs btn-danger" onclick="delClient('${c.id}')">Del</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+}
+
+let editCId=null;
+function openClientModal(id){
+  editCId=id||null;
+  const c=id?S.clients.find(c=>c.id===id):null;
+  showModal(`<div class="modal-ov"><div class="modal">
+    <div class="modal-hd"><h2>${id?'Edit Client':'New Client'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg"><label>Name <span class="req">*</span></label><input class="fc" id="c-name" value="${c?.name||''}"/></div>
+        <div class="fg"><label>Company</label><input class="fc" id="c-co" value="${c?.company||''}"/></div>
+        <div class="fg"><label>Email</label><input class="fc" id="c-em" value="${c?.email||''}"/></div>
+        <div class="fg"><label>Phone</label><input class="fc" id="c-ph" value="${c?.phone||''}"/></div>
+        <div class="fg"><label>Website</label><input class="fc" id="c-web" value="${c?.website||''}"/></div>
+        <div class="fg"><label>Currency</label><select class="fc" id="c-cur">${['AUD','USD','GBP','EUR','NZD','CAD'].map(x=>`<option ${(c?.currency||'AUD')===x?'selected':''}>${x}</option>`).join('')}</select></div>
+        <div class="fg"><label>Status</label><select class="fc" id="c-st"><option value="active" ${(c?.status||'active')==='active'?'selected':''}>Active</option><option value="inactive" ${c?.status==='inactive'?'selected':''}>Inactive</option></select></div>
+        <div class="fg"><label>Tags (comma sep.)</label><input class="fc" id="c-tags" value="${(c?.tags||[]).join(', ')}"/></div>
+        <div class="fg s2"><label>Address</label><input class="fc" id="c-addr" value="${c?.address||''}"/></div>
+        <div class="fg s2"><label>Notes</label><textarea class="fc" id="c-notes">${c?.notes||''}</textarea></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    </div>
+  </div></div>`);
+}
+
+function saveClient(){
+  const name=document.getElementById('c-name')?.value.trim();
+  if(!name){toast('Name required','e');return}
+  const cl={
+    id:editCId||uid(),name,
+    company:document.getElementById('c-co')?.value.trim(),
+    email:document.getElementById('c-em')?.value.trim(),
+    phone:document.getElementById('c-ph')?.value.trim(),
+    website:document.getElementById('c-web')?.value.trim(),
+    address:document.getElementById('c-addr')?.value.trim(),
+    currency:document.getElementById('c-cur')?.value,
+    status:document.getElementById('c-st')?.value,
+    tags:document.getElementById('c-tags')?.value.split(',').map(t=>t.trim()).filter(Boolean),
+    notes:document.getElementById('c-notes')?.value.trim(),
+    createdAt:editCId?(S.clients.find(c=>c.id===editCId)?.createdAt||today()):today(),
+  };
+  if(editCId){const i=S.clients.findIndex(c=>c.id===editCId);if(i>=0)S.clients[i]=cl;}
+  else{S.clients.push(cl);logAct('client','added',name,cl.id,'👤')}
+  saveState();closeModal();toast(editCId?'Client updated':'Client added','s');renderClients();
+}
+function delClient(id){
+  confirm2('Delete this client?',()=>{
+    S.clients=S.clients.filter(c=>c.id!==id);
+    saveState();renderClients();toast('Client deleted');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// LEADS / PIPELINE
+// ═══════════════════════════════════════════════════════
+const STAGES=[
+  {id:'new',lbl:'New Lead',col:'gray'},
+  {id:'contacted',lbl:'Contacted',col:'blue'},
+  {id:'proposal',lbl:'Proposal Sent',col:'orange'},
+  {id:'negotiation',lbl:'Negotiation',col:'purple'},
+  {id:'won',lbl:'Won 🎉',col:'teal'},
+  {id:'lost',lbl:'Lost',col:'red'},
+];
+
+function renderLeads(){
+  const leads=S.leads||[];
+  const pipe=leads.filter(l=>!['won','lost'].includes(l.stage)).reduce((s,l)=>s+(parseFloat(l.value)||0)*((parseFloat(l.prob)||0)/100),0);
+  const won=leads.filter(l=>l.stage==='won').reduce((s,l)=>s+(parseFloat(l.value)||0),0);
+
+  document.getElementById('page-leads').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Sales Pipeline</h1><p>Weighted pipeline: ${money(pipe)} · Won: ${money(won)}</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openLeadModal()">+ New Lead</button></div>
+  </div>
+  <div class="kanban" id="lead-kanban">
+    ${STAGES.map(st=>{
+      const stageLds=leads.filter(l=>l.stage===st.id);
+      const stVal=stageLds.reduce((s,l)=>s+(parseFloat(l.value)||0),0);
+      return`<div class="kb-col" data-stage="${st.id}" ondragover="event.preventDefault()" ondrop="dropLead(event,'${st.id}')">
+        <div class="kb-hd">
+          <div><div class="kb-title">${st.lbl}</div>${stVal>0?`<div style="font-size:10.5px;color:var(--muted);margin-top:1px">${money(stVal)}</div>`:''}</div>
+          <span class="kb-count">${stageLds.length}</span>
+        </div>
+        <div class="kb-cards">
+          ${stageLds.map(l=>`
+            <div class="kb-card" draggable="true" ondragstart="dragLead(event,'${l.id}')" onclick="openLeadModal('${l.id}')">
+              <div class="kb-ct">${l.name}</div>
+              ${l.company?`<div style="font-size:11.5px;color:var(--muted);margin-bottom:5px">${l.company}</div>`:''}
+              <div class="kb-meta">
+                <span class="badge b-${st.col}">${money(l.value||0)}</span>
+                <span style="font-size:11px;color:var(--muted)">${l.prob||0}%</span>
+                ${l.followUp&&isOver(l.followUp)?'<span class="badge b-red">Follow up!</span>':''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+let dragLId=null;
+function dragLead(e,id){dragLId=id;e.dataTransfer.effectAllowed='move'}
+function dropLead(e,stage){e.preventDefault();if(!dragLId)return;const l=S.leads?.find(l=>l.id===dragLId);if(l){l.stage=stage;saveState();renderLeads()}dragLId=null}
+
+let editLId=null;
+function openLeadModal(id){
+  editLId=id||null;
+  const l=id?S.leads?.find(l=>l.id===id):null;
+  showModal(`<div class="modal-ov"><div class="modal">
+    <div class="modal-hd"><h2>${id?'Edit Lead':'New Lead'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg"><label>Name <span class="req">*</span></label><input class="fc" id="l-name" value="${l?.name||''}"/></div>
+        <div class="fg"><label>Company</label><input class="fc" id="l-co" value="${l?.company||''}"/></div>
+        <div class="fg"><label>Email</label><input class="fc" id="l-em" value="${l?.email||''}"/></div>
+        <div class="fg"><label>Phone</label><input class="fc" id="l-ph" value="${l?.phone||''}"/></div>
+        <div class="fg"><label>Value ($)</label><input class="fc" type="number" id="l-val" value="${l?.value||''}"/></div>
+        <div class="fg"><label>Probability (%)</label><input class="fc" type="number" id="l-prob" value="${l?.prob||50}" min="0" max="100"/></div>
+        <div class="fg"><label>Stage</label><select class="fc" id="l-stage">${STAGES.map(s=>`<option value="${s.id}" ${(l?.stage||'new')===s.id?'selected':''}>${s.lbl}</option>`).join('')}</select></div>
+        <div class="fg"><label>Source</label><select class="fc" id="l-src">${['Referral','LinkedIn','Website','Cold Outreach','Conference','Social Media','Other'].map(s=>`<option ${l?.source===s?'selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="fg"><label>Follow-up Date</label><input class="fc" type="date" id="l-fu" value="${l?.followUp||''}"/></div>
+        <div class="fg s2"><label>Notes</label><textarea class="fc" id="l-notes">${l?.notes||''}</textarea></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delLead('${id}')">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
+    </div>
+  </div></div>`);
+}
+
+function saveLead(){
+  const name=document.getElementById('l-name')?.value.trim();
+  if(!name){toast('Name required','e');return}
+  const lead={
+    id:editLId||uid(),name,
+    company:document.getElementById('l-co')?.value.trim(),
+    email:document.getElementById('l-em')?.value.trim(),
+    phone:document.getElementById('l-ph')?.value.trim(),
+    value:parseFloat(document.getElementById('l-val')?.value)||0,
+    prob:parseFloat(document.getElementById('l-prob')?.value)||0,
+    stage:document.getElementById('l-stage')?.value,
+    source:document.getElementById('l-src')?.value,
+    followUp:document.getElementById('l-fu')?.value,
+    notes:document.getElementById('l-notes')?.value.trim(),
+    createdAt:editLId?(S.leads.find(l=>l.id===editLId)?.createdAt||today()):today(),
+  };
+  if(editLId){const i=S.leads.findIndex(l=>l.id===editLId);if(i>=0)S.leads[i]=lead;}
+  else{S.leads.push(lead);logAct('lead','added',name,lead.id,'🎯')}
+  saveState();closeModal();toast(editLId?'Lead updated':'Lead added','s');renderLeads();
+}
+function delLead(id){S.leads=S.leads.filter(l=>l.id!==id);saveState();closeModal();toast('Lead deleted');renderLeads()}
+
+// ═══════════════════════════════════════════════════════
+// PROJECTS
+// ═══════════════════════════════════════════════════════
+let projQ='',projStatusF='';
+function renderProjects(){
+  let list=S.projects||[];
+  if(projQ)list=list.filter(p=>p.name.toLowerCase().includes(projQ)||clientName(p.clientId).toLowerCase().includes(projQ));
+  if(projStatusF)list=list.filter(p=>p.status===projStatusF);
+
+  document.getElementById('page-projects').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Projects</h1><p>${S.projects?.filter(p=>p.status==='active').length||0} active · ${S.projects?.filter(p=>p.status==='complete').length||0} complete</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openProjModal()">+ New Project</button></div>
+  </div>
+  <div class="filters">
+    <div class="fsearch"><span>🔍</span><input placeholder="Search projects…" value="${projQ}" oninput="projQ=this.value.toLowerCase();renderProjects()"/></div>
+    <select class="fsel" onchange="projStatusF=this.value;renderProjects()">
+      <option value="">All Status</option>
+      <option value="active">Active</option><option value="complete">Complete</option><option value="paused">Paused</option>
+    </select>
+  </div>
+  <div class="g-auto">
+    ${list.length===0?`<div class="card" style="grid-column:1/-1"><div class="empty"><div class="empty-ic">📁</div><h3>No projects yet</h3><p>Create a project to start tracking your work.</p><button class="btn btn-primary" onclick="openProjModal()">+ New Project</button></div></div>`:''}
+    ${list.map(p=>{
+      const days=p.deadline?Math.ceil((new Date(p.deadline)-new Date())/86400000):null;
+      const timeL=(S.timeEntries||[]).filter(t=>t.projectId===p.id).reduce((s,t)=>s+(t.duration||0),0);
+      const scol={active:'blue',complete:'green',paused:'gray'};
+      const pcol={high:'red',medium:'orange',low:'gray'};
+      return`<div class="card" style="cursor:pointer" onclick="openProjModal('${p.id}')">
+        <div class="card-body">
+          <div class="flex jc-b mb2"><span class="badge b-${scol[p.status]||'gray'}">${p.status}</span><span class="badge b-${pcol[p.priority]||'gray'}">${p.priority||'medium'}</span></div>
+          <div style="font-size:14.5px;font-weight:700;margin-bottom:3px;letter-spacing:-.01em">${p.name}</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:11px">${clientName(p.clientId)}</div>
+          <div class="mb3">
+            <div class="flex jc-b fs12 mb2"><span class="tc-m">Progress</span><span class="fw6">${p.progress||0}%</span></div>
+            <div class="prog"><div class="prog-fill ${(p.progress||0)>=100?'g':''}" style="width:${p.progress||0}%"></div></div>
+          </div>
+          <div class="flex jc-b fs12 tc-m">
+            <span>💰 ${money(p.budget||0)}</span>
+            <span>⏱ ${fmtMins(timeL)}</span>
+            <span style="color:${days!==null&&days<0?'var(--red)':days!==null&&days<=7?'var(--orange)':'var(--muted)'}">${days===null?'—':days<0?`${Math.abs(days)}d over`:`${days}d left`}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+let editPId=null;
+function openProjModal(id){
+  editPId=id||null;
+  const p=id?S.projects?.find(p=>p.id===id):null;
+  showModal(`<div class="modal-ov"><div class="modal lg">
+    <div class="modal-hd"><h2>${id?'Edit Project':'New Project'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg s2"><label>Project Name <span class="req">*</span></label><input class="fc" id="p-name" value="${p?.name||''}"/></div>
+        <div class="fg"><label>Client</label><select class="fc" id="p-cl"><option value="">— No client —</option>${(S.clients||[]).map(c=>`<option value="${c.id}" ${p?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Status</label><select class="fc" id="p-st">${['active','complete','paused'].map(s=>`<option value="${s}" ${(p?.status||'active')===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Priority</label><select class="fc" id="p-pri">${['high','medium','low'].map(s=>`<option value="${s}" ${(p?.priority||'medium')===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Progress (%)</label><input class="fc" type="number" id="p-prog" value="${p?.progress||0}" min="0" max="100"/></div>
+        <div class="fg"><label>Start Date</label><input class="fc" type="date" id="p-start" value="${p?.start||today()}"/></div>
+        <div class="fg"><label>Deadline</label><input class="fc" type="date" id="p-dead" value="${p?.deadline||''}"/></div>
+        <div class="fg"><label>Budget ($)</label><input class="fc" type="number" id="p-bud" value="${p?.budget||''}"/></div>
+        <div class="fg"><label>Hourly Rate ($/hr)</label><input class="fc" type="number" id="p-rate" value="${p?.rate||''}"/></div>
+        <div class="fg s2"><label>Description</label><textarea class="fc" id="p-desc">${p?.desc||''}</textarea></div>
+        <div class="fg s2"><label>Notes</label><textarea class="fc" id="p-notes" rows="2">${p?.notes||''}</textarea></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delProj('${id}')">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveProj()">Save Project</button>
+    </div>
+  </div></div>`);
+}
+
+function saveProj(){
+  const name=document.getElementById('p-name')?.value.trim();
+  if(!name){toast('Project name required','e');return}
+  const proj={
+    id:editPId||uid(),name,
+    clientId:document.getElementById('p-cl')?.value||null,
+    status:document.getElementById('p-st')?.value,
+    priority:document.getElementById('p-pri')?.value,
+    progress:parseFloat(document.getElementById('p-prog')?.value)||0,
+    start:document.getElementById('p-start')?.value,
+    deadline:document.getElementById('p-dead')?.value,
+    budget:parseFloat(document.getElementById('p-bud')?.value)||0,
+    rate:parseFloat(document.getElementById('p-rate')?.value)||0,
+    desc:document.getElementById('p-desc')?.value.trim(),
+    notes:document.getElementById('p-notes')?.value.trim(),
+  };
+  if(editPId){const i=S.projects.findIndex(p=>p.id===editPId);if(i>=0)S.projects[i]=proj;}
+  else{S.projects.push(proj);logAct('project','created',name,proj.id,'📁')}
+  saveState();closeModal();toast(editPId?'Project updated':'Project created','s');renderProjects();
+}
+function delProj(id){confirm2('Delete this project?',()=>{S.projects=S.projects.filter(p=>p.id!==id);saveState();closeModal();toast('Project deleted');renderProjects()})}
+
+// ═══════════════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════════════
+const TASK_COLS=[{id:'todo',lbl:'To Do',col:'gray'},{id:'inprogress',lbl:'In Progress',col:'blue'},{id:'review',lbl:'Review',col:'orange'},{id:'done',lbl:'Done',col:'green'}];
+
+function renderTasks(){
+  const tasks=S.tasks||[];
+  const open=tasks.filter(t=>t.status!=='done').length;
+  const over=tasks.filter(t=>t.status!=='done'&&isOver(t.due)).length;
+
+  document.getElementById('page-tasks').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Tasks</h1><p>${open} open${over>0?` · <span style="color:var(--red)">${over} overdue</span>`:''}</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openTaskModal()">+ New Task</button></div>
+  </div>
+  <div class="kanban">
+    ${TASK_COLS.map(col=>{
+      const colTasks=tasks.filter(t=>t.status===col.id);
+      return`<div class="kb-col" data-col="${col.id}" ondragover="event.preventDefault()" ondrop="dropTask(event,'${col.id}')">
+        <div class="kb-hd"><div class="kb-title">${col.lbl}</div><span class="kb-count">${colTasks.length}</span></div>
+        <div class="kb-cards">
+          ${colTasks.map(t=>{
+            const over=t.status!=='done'&&isOver(t.due);
+            const pcol={high:'red',medium:'orange',low:'gray'};
+            return`<div class="kb-card" draggable="true" ondragstart="dragTask(event,'${t.id}')" onclick="openTaskModal('${t.id}')">
+              ${over?`<div style="height:3px;background:var(--red);border-radius:3px 3px 0 0;margin:-11px -11px 9px"></div>`:''}
+              <div class="kb-ct">${t.title}</div>
+              <div class="kb-meta">
+                ${t.priority?`<span class="badge b-${pcol[t.priority]||'gray'}" style="font-size:10px">${t.priority}</span>`:''}
+                ${t.due?`<span style="font-size:11px;color:${over?'var(--red)':'var(--muted)'}">${over?'⚠ ':''}${fmtShort(t.due)}</span>`:''}
+                ${t.projectId?`<span style="font-size:11px;color:var(--muted)">${projName(t.projectId).slice(0,15)}</span>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+let dragTId=null;
+function dragTask(e,id){dragTId=id}
+function dropTask(e,col){e.preventDefault();if(!dragTId)return;const t=S.tasks?.find(t=>t.id===dragTId);if(t){t.status=col;if(col==='done')logAct('task','completed',t.title,t.id,'✅');saveState();renderTasks();updateBadges()}dragTId=null}
+
+let editTId=null;
+function openTaskModal(id){
+  editTId=id||null;
+  const t=id?S.tasks?.find(t=>t.id===id):null;
+  showModal(`<div class="modal-ov"><div class="modal">
+    <div class="modal-hd"><h2>${id?'Edit Task':'New Task'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg s2"><label>Title <span class="req">*</span></label><input class="fc" id="t-title" value="${t?.title||''}"/></div>
+        <div class="fg"><label>Project</label><select class="fc" id="t-proj"><option value="">— No project —</option>${(S.projects||[]).map(p=>`<option value="${p.id}" ${t?.projectId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Client</label><select class="fc" id="t-cl"><option value="">— No client —</option>${(S.clients||[]).map(c=>`<option value="${c.id}" ${t?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Status</label><select class="fc" id="t-st">${TASK_COLS.map(c=>`<option value="${c.id}" ${(t?.status||'todo')===c.id?'selected':''}>${c.lbl}</option>`).join('')}</select></div>
+        <div class="fg"><label>Priority</label><select class="fc" id="t-pri">${['high','medium','low'].map(p=>`<option value="${p}" ${(t?.priority||'medium')===p?'selected':''}>${p.charAt(0).toUpperCase()+p.slice(1)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Due Date</label><input class="fc" type="date" id="t-due" value="${t?.due||''}"/></div>
+        <div class="fg s2"><label>Description</label><textarea class="fc" id="t-desc">${t?.desc||''}</textarea></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delTask('${id}')">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveTask()">Save Task</button>
+    </div>
+  </div></div>`);
+}
+
+function saveTask(){
+  const title=document.getElementById('t-title')?.value.trim();
+  if(!title){toast('Title required','e');return}
+  const task={id:editTId||uid(),title,projectId:document.getElementById('t-proj')?.value||null,clientId:document.getElementById('t-cl')?.value||null,status:document.getElementById('t-st')?.value,priority:document.getElementById('t-pri')?.value,due:document.getElementById('t-due')?.value,desc:document.getElementById('t-desc')?.value.trim(),createdAt:editTId?(S.tasks.find(t=>t.id===editTId)?.createdAt||today()):today()};
+  if(editTId){const i=S.tasks.findIndex(t=>t.id===editTId);if(i>=0)S.tasks[i]=task;}
+  else S.tasks.push(task);
+  saveState();closeModal();toast(editTId?'Task updated':'Task created','s');renderTasks();updateBadges();
+}
+function delTask(id){S.tasks=S.tasks.filter(t=>t.id!==id);saveState();closeModal();toast('Task deleted');renderTasks();updateBadges()}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════
+// TIME TRACKING
+// ═══════════════════════════════════════════════════════
+let timerInt=null;
+
+function renderTime(){
+  const tes=S.timeEntries||[];
+  const billMins=tes.filter(t=>t.billable).reduce((s,t)=>s+(t.duration||0),0);
+  const billVal=tes.filter(t=>t.billable).reduce((s,t)=>s+((t.duration||0)/60)*(t.rate||0),0);
+  const unbilled=tes.filter(t=>t.billable&&!t.billed).reduce((s,t)=>s+((t.duration||0)/60)*(t.rate||0),0);
+
+  document.getElementById('page-time').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Time Tracking</h1><p>${fmtMins(billMins)} billable · ${money(billVal)} value · ${money(unbilled)} unbilled</p></div>
+    <div class="ph-right"><button class="btn btn-secondary" onclick="openTimeModal()">+ Manual Entry</button></div>
+  </div>
+  <div class="card mb4">
+    <div class="card-body">
+      <div class="timer-w ${S.timer?.running?'timer-running':''}" id="timer-widget">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:.08em">${S.timer?.running?'● Recording':'Timer'}</div>
+          <div class="timer-d" id="timer-display">${fmtSecs(S.timer?.secs||0)}</div>
+        </div>
+        <div style="flex:1;padding:0 14px">
+          <input class="fc" id="timer-desc" placeholder="What are you working on?" value="${S.timer?.desc||''}" style="margin-bottom:6px" oninput="S.timer.desc=this.value"/>
+          <div class="flex gap2">
+            <select class="fc" id="timer-proj" onchange="S.timer.projectId=this.value" style="flex:1">
+              <option value="">— Project —</option>
+              ${(S.projects||[]).map(p=>`<option value="${p.id}" ${S.timer?.projectId===p.id?'selected':''}>${p.name}</option>`).join('')}
+            </select>
+            <select class="fc" id="timer-cl" onchange="S.timer.clientId=this.value" style="flex:1">
+              <option value="">— Client —</option>
+              ${(S.clients||[]).map(c=>`<option value="${c.id}" ${S.timer?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div class="flex gap2">
+          ${S.timer?.running
+            ?`<button class="btn btn-danger" onclick="stopTimer()" style="min-width:78px">⏹ Stop</button>`
+            :`<button class="btn btn-success" onclick="startTimer()" style="min-width:78px">▶ Start</button>`}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Time Entries</div></div>
+    ${tes.length===0?`<div class="empty"><div class="empty-ic">⏱</div><h3>No time entries</h3><p>Start the timer or add a manual entry.</p></div>`:`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Description</th><th>Project</th><th>Client</th><th>Date</th><th>Duration</th><th>Rate</th><th>Value</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        ${[...tes].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(te=>{
+          const val=((te.duration||0)/60)*(te.rate||0);
+          return`<tr>
+            <td class="td-bold">${te.desc||'—'}</td>
+            <td class="td-muted">${projName(te.projectId)}</td>
+            <td class="td-muted">${clientName(te.clientId)}</td>
+            <td class="td-muted">${fmtShort(te.date)}</td>
+            <td class="td-mono fw6">${fmtMins(te.duration||0)}</td>
+            <td class="td-mono">${te.rate?money(te.rate)+'/hr':'—'}</td>
+            <td class="fw6 ${te.billable?'tc-g':'tc-m'}">${te.billable?money(val):'—'}</td>
+            <td>${te.billable?`<span class="badge ${te.billed?'b-gray':'b-green'}">${te.billed?'Billed':'Unbilled'}</span>`:`<span class="badge b-gray">Non-bill</span>`}</td>
+            <td><div class="flex gap1">
+              <button class="btn btn-xs btn-secondary" onclick="openTimeModal('${te.id}')">Edit</button>
+              <button class="btn btn-xs btn-danger" onclick="delTE('${te.id}')">Del</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+  if(S.timer?.running)startTimerDisplay();
+}
+
+function startTimer(){
+  S.timer.running=true;S.timer.startedAt=Date.now()-(S.timer.secs||0)*1000;
+  S.timer.desc=document.getElementById('timer-desc')?.value||'';
+  S.timer.projectId=document.getElementById('timer-proj')?.value||null;
+  S.timer.clientId=document.getElementById('timer-cl')?.value||null;
+  startTimerDisplay();renderTime();
+}
+function startTimerDisplay(){
+  if(timerInt)clearInterval(timerInt);
+  timerInt=setInterval(()=>{
+    const el=S.timer?.startedAt?Math.floor((Date.now()-S.timer.startedAt)/1000):0;
+    S.timer.secs=el;
+    const d=document.getElementById('timer-display');
+    if(d)d.textContent=fmtSecs(el);
+  },1000);
+}
+function stopTimer(){
+  if(timerInt){clearInterval(timerInt);timerInt=null}
+  const mins=Math.round((S.timer.secs||0)/60);
+  if(mins>0){
+    const proj=S.projects?.find(p=>p.id===S.timer.projectId);
+    const te={id:uid(),desc:S.timer.desc||'Timed session',projectId:S.timer.projectId||null,clientId:S.timer.clientId||null,date:today(),duration:mins,billable:true,rate:proj?.rate||0,billed:false};
+    if(!S.timeEntries)S.timeEntries=[];
+    S.timeEntries.push(te);saveState();toast(`${fmtMins(mins)} saved`,'s');
+  }
+  S.timer={running:false,startedAt:null,secs:0,projectId:null,clientId:null,desc:''};
+  renderTime();
+}
+
+let editTEId=null;
+function openTimeModal(id){
+  editTEId=id||null;
+  const te=id?S.timeEntries?.find(t=>t.id===id):null;
+  showModal(`<div class="modal-ov"><div class="modal">
+    <div class="modal-hd"><h2>${id?'Edit Entry':'Manual Time Entry'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg s2"><label>Description</label><input class="fc" id="te-desc" value="${te?.desc||''}"/></div>
+        <div class="fg"><label>Project</label><select class="fc" id="te-proj"><option value="">—</option>${(S.projects||[]).map(p=>`<option value="${p.id}" ${te?.projectId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Client</label><select class="fc" id="te-cl"><option value="">—</option>${(S.clients||[]).map(c=>`<option value="${c.id}" ${te?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Date</label><input class="fc" type="date" id="te-date" value="${te?.date||today()}"/></div>
+        <div class="fg"><label>Duration (minutes)</label><input class="fc" type="number" id="te-dur" value="${te?.duration||60}" min="1"/></div>
+        <div class="fg"><label>Hourly Rate ($)</label><input class="fc" type="number" id="te-rate" value="${te?.rate||0}"/></div>
+        <div class="fg"><label>Billable?</label><select class="fc" id="te-bill"><option value="true" ${te?.billable!==false?'selected':''}>Billable</option><option value="false" ${te?.billable===false?'selected':''}>Non-billable</option></select></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delTE('${id}');closeModal()">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveTE()">Save</button>
+    </div>
+  </div></div>`);
+}
+function saveTE(){
+  const te={id:editTEId||uid(),desc:document.getElementById('te-desc')?.value.trim(),projectId:document.getElementById('te-proj')?.value||null,clientId:document.getElementById('te-cl')?.value||null,date:document.getElementById('te-date')?.value,duration:parseInt(document.getElementById('te-dur')?.value)||0,rate:parseFloat(document.getElementById('te-rate')?.value)||0,billable:document.getElementById('te-bill')?.value!=='false',billed:false};
+  if(!S.timeEntries)S.timeEntries=[];
+  if(editTEId){const i=S.timeEntries.findIndex(t=>t.id===editTEId);if(i>=0)S.timeEntries[i]=te;}
+  else S.timeEntries.push(te);
+  saveState();closeModal();toast('Entry saved','s');renderTime();
+}
+function delTE(id){S.timeEntries=S.timeEntries.filter(t=>t.id!==id);saveState();renderTime();toast('Deleted')}
+
+// ═══════════════════════════════════════════════════════
+// INVOICES
+// ═══════════════════════════════════════════════════════
+let invQ='',invStatusF='';
+let invLineItems=[];
+
+function renderInvoices(){
+  let list=S.invoices||[];
+  if(invQ)list=list.filter(i=>i.number.toLowerCase().includes(invQ)||clientName(i.clientId).toLowerCase().includes(invQ));
+  if(invStatusF)list=list.filter(i=>invStatus(i)===invStatusF);
+
+  const stats={
+    paid:list.filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0),
+    outstanding:list.filter(i=>['sent','unpaid'].includes(invStatus(i))).reduce((s,i)=>s+calcInv(i).balance,0),
+    overdue:list.filter(i=>invStatus(i)==='overdue').reduce((s,i)=>s+calcInv(i).balance,0),
+  };
+
+  document.getElementById('page-invoices').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Invoices</h1><p>${S.invoices?.length||0} total · ${money(stats.paid)} paid · ${money(stats.outstanding)} outstanding</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openInvModal()">+ New Invoice</button></div>
+  </div>
+  ${stats.overdue>0?`<div class="alert alert-err mb4">🚨 <strong>${money(stats.overdue)}</strong> overdue across ${list.filter(i=>invStatus(i)==='overdue').length} invoice${list.filter(i=>invStatus(i)==='overdue').length!==1?'s':''}.</div>`:''}
+  <div class="filters">
+    <div class="fsearch"><span>🔍</span><input placeholder="Search invoices…" value="${invQ}" oninput="invQ=this.value.toLowerCase();renderInvoices()"/></div>
+    <select class="fsel" onchange="invStatusF=this.value;renderInvoices()">
+      <option value="">All Status</option>
+      ${['paid','sent','unpaid','overdue','draft','cancelled'].map(s=>`<option value="${s}" ${invStatusF===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+    </select>
+  </div>
+  <div class="card">
+    ${list.length===0?`<div class="empty"><div class="empty-ic">📄</div><h3>No invoices</h3><p>Create your first invoice to get paid.</p><button class="btn btn-primary" onclick="openInvModal()">+ Create Invoice</button></div>`:`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Invoice #</th><th>Client</th><th>Date</th><th>Due</th><th>Total</th><th>Balance</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${[...list].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(inv=>{
+          const c=calcInv(inv);const st=invStatus(inv);
+          const sbadge={paid:'b-green',sent:'b-blue',unpaid:'b-orange',overdue:'b-red',draft:'b-gray',cancelled:'b-gray'};
+          return`<tr>
+            <td class="td-bold td-mono">${inv.number}</td>
+            <td><div class="flex items-c gap2">${avEl(clientName(inv.clientId),'sm')} ${clientName(inv.clientId)}</div></td>
+            <td class="td-muted">${fmtDate(inv.date)}</td>
+            <td class="td-muted" style="color:${st==='overdue'?'var(--red)':''}">${fmtDate(inv.due)}</td>
+            <td class="fw6">${money(c.total)}</td>
+            <td class="fw6 ${c.balance>0?'tc-o':'tc-g'}">${money(c.balance)}</td>
+            <td><span class="badge ${sbadge[st]||'b-gray'}">${st}</span></td>
+            <td><div class="flex gap1">
+              ${st!=='paid'?`<button class="btn btn-xs btn-success" onclick="markPaid('${inv.id}')">✓ Paid</button>`:''}
+              <button class="btn btn-xs btn-secondary" onclick="openInvModal('${inv.id}')">Edit</button>
+              <button class="btn btn-xs btn-secondary" onclick="pdfInv('${inv.id}')">PDF</button>
+              <button class="btn btn-xs btn-secondary" onclick="dupInv('${inv.id}')">Dup</button>
+              <button class="btn btn-xs btn-danger" onclick="delInv('${inv.id}')">Del</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+}
+
+let editInvId=null;
+function openInvModal(id){
+  editInvId=id||null;
+  const inv=id?S.invoices?.find(i=>i.id===id):null;
+  invLineItems=inv?(inv.items||[]).map(i=>({...i})):[{id:uid(),desc:'',qty:1,rate:''}];
+  const num=inv?.number||`${S.settings.invPrefix||'INV'}-${String(S.settings.nextInv||1).padStart(3,'0')}`;
+
+  showModal(`<div class="modal-ov"><div class="modal xl">
+    <div class="modal-hd"><h2>${id?'Edit Invoice':'New Invoice'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid" style="margin-bottom:14px">
+        <div class="fg"><label>Client <span class="req">*</span></label><select class="fc" id="inv-cl"><option value="">— Select —</option>${(S.clients||[]).map(c=>`<option value="${c.id}" ${inv?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Invoice #</label><input class="fc" id="inv-num" value="${num}"/></div>
+        <div class="fg"><label>Project</label><select class="fc" id="inv-proj"><option value="">—</option>${(S.projects||[]).map(p=>`<option value="${p.id}" ${inv?.projectId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Status</label><select class="fc" id="inv-st">${['draft','sent','unpaid','paid','overdue','cancelled'].map(s=>`<option value="${s}" ${(inv?.status||'draft')===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Issue Date</label><input class="fc" type="date" id="inv-date" value="${inv?.date||today()}"/></div>
+        <div class="fg"><label>Due Date</label><input class="fc" type="date" id="inv-due" value="${inv?.due||addDays(today(),S.settings.payTerms||14)}"/></div>
+        <div class="fg"><label>Tax Rate (%)</label><input class="fc" type="number" id="inv-tax" value="${inv?.taxRate??S.settings.taxRate??10}" oninput="updateInvTotals()"/></div>
+        <div class="fg"><label>Discount (%)</label><input class="fc" type="number" id="inv-disc" value="${inv?.discount||0}" oninput="updateInvTotals()"/></div>
+        <div class="fg s2"><label>Notes / Terms</label><input class="fc" id="inv-notes" value="${inv?.notes||''}"/></div>
+      </div>
+      <hr class="sec-div"/>
+      <div class="flex jc-b items-c mb3"><label class="form-label" style="margin:0">Line Items</label><button class="btn btn-xs btn-secondary" onclick="addInvLI()">+ Add Row</button></div>
+      <div class="li-wrap mb3"><table>
+        <thead><tr><th style="width:42%">Description</th><th style="width:12%">Qty</th><th style="width:18%">Rate ($)</th><th style="width:18%">Amount</th><th style="width:8%"></th></tr></thead>
+        <tbody id="inv-li-body"></tbody>
+      </table></div>
+      <div class="inv-totals" id="inv-totals"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-secondary" onclick="saveInv('draft')">Save Draft</button>
+      <button class="btn btn-primary" onclick="saveInv('sent')">Save & Send</button>
+    </div>
+  </div></div>`);
+  renderInvLI();
+}
+
+function renderInvLI(){
+  const body=document.getElementById('inv-li-body');if(!body)return;
+  body.innerHTML=invLineItems.map((li,i)=>`
+    <tr>
+      <td><input type="text" value="${li.desc||''}" placeholder="Description" oninput="invLineItems[${i}].desc=this.value"/></td>
+      <td><input type="number" value="${li.qty||1}" min="0" step="0.5" oninput="invLineItems[${i}].qty=this.value;updateInvTotals()"/></td>
+      <td><input type="number" value="${li.rate||''}" min="0" step="0.01" placeholder="0.00" oninput="invLineItems[${i}].rate=this.value;updateInvTotals()"/></td>
+      <td style="font-weight:600;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:12px" id="li-a-${i}">${money((parseFloat(li.qty)||0)*(parseFloat(li.rate)||0))}</td>
+      <td><button onclick="remInvLI(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:3px 8px" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--muted)'">✕</button></td>
+    </tr>`).join('');
+  updateInvTotals();
+}
+function addInvLI(){invLineItems.push({id:uid(),desc:'',qty:1,rate:''});renderInvLI()}
+function remInvLI(i){invLineItems.splice(i,1);renderInvLI()}
+function updateInvTotals(){
+  invLineItems.forEach((li,i)=>{const e=document.getElementById(`li-a-${i}`);if(e)e.textContent=money((parseFloat(li.qty)||0)*(parseFloat(li.rate)||0))});
+  const sub=invLineItems.reduce((s,li)=>s+(parseFloat(li.qty)||0)*(parseFloat(li.rate)||0),0);
+  const tr=parseFloat(document.getElementById('inv-tax')?.value)||0;
+  const dr=parseFloat(document.getElementById('inv-disc')?.value)||0;
+  const disc=sub*(dr/100);const after=sub-disc;const tax=after*(tr/100);const total=after+tax;
+  const el=document.getElementById('inv-totals');
+  if(el)el.innerHTML=`
+    <div class="tot-row"><span class="tl">Subtotal</span><span class="tv">${money(sub)}</span></div>
+    ${dr>0?`<div class="tot-row"><span class="tl">Discount (${dr}%)</span><span class="tv tc-r">−${money(disc)}</span></div>`:''}
+    <div class="tot-row"><span class="tl">Tax (${tr}%)</span><span class="tv">${money(tax)}</span></div>
+    <div class="tot-row grand"><span class="tl">Total</span><span class="tv">${money(total)}</span></div>`;
+}
+
+function saveInv(defSt){
+  const clId=document.getElementById('inv-cl')?.value;
+  if(!clId){toast('Please select a client','e');return}
+  const num=document.getElementById('inv-num')?.value.trim();
+  if(!num){toast('Invoice number required','e');return}
+  const inv={
+    id:editInvId||uid(),number:num,clientId:clId,
+    projectId:document.getElementById('inv-proj')?.value||null,
+    status:document.getElementById('inv-st')?.value||defSt,
+    date:document.getElementById('inv-date')?.value,
+    due:document.getElementById('inv-due')?.value,
+    taxRate:parseFloat(document.getElementById('inv-tax')?.value)||0,
+    discount:parseFloat(document.getElementById('inv-disc')?.value)||0,
+    notes:document.getElementById('inv-notes')?.value.trim(),
+    items:invLineItems.map(li=>({...li})),
+    payments:editInvId?(S.invoices.find(i=>i.id===editInvId)?.payments||[]):[],
+  };
+  if(!S.invoices)S.invoices=[];
+  if(editInvId){const i=S.invoices.findIndex(i=>i.id===editInvId);if(i>=0)S.invoices[i]=inv;}
+  else{S.invoices.push(inv);S.settings.nextInv=(S.settings.nextInv||1)+1;logAct('invoice','created',num,inv.id,'📄')}
+  saveState();closeModal();toast(editInvId?'Invoice updated':'Invoice created','s');renderInvoices();updateBadges();
+}
+
+function markPaid(id){
+  const inv=S.invoices?.find(i=>i.id===id);if(!inv)return;
+  const c=calcInv(inv);
+  if(!inv.payments)inv.payments=[];
+  if(c.balance>0)inv.payments.push({id:uid(),amount:c.balance,date:today(),method:'Bank Transfer',ref:''});
+  inv.status='paid';saveState();renderInvoices();renderDash();
+  logAct('invoice','marked as paid',inv.number,id,'💰');toast(`${inv.number} marked as paid`,'s');
+}
+function dupInv(id){
+  const inv=S.invoices?.find(i=>i.id===id);if(!inv)return;
+  const num=`${S.settings.invPrefix||'INV'}-${String(S.settings.nextInv||1).padStart(3,'0')}`;
+  const copy={...inv,id:uid(),number:num,status:'draft',date:today(),due:addDays(today(),S.settings.payTerms||14),payments:[],items:(inv.items||[]).map(li=>({...li,id:uid()}))};
+  S.invoices.push(copy);S.settings.nextInv=(S.settings.nextInv||1)+1;
+  saveState();renderInvoices();toast('Invoice duplicated','s');
+}
+function delInv(id){confirm2('Delete this invoice?',()=>{S.invoices=S.invoices.filter(i=>i.id!==id);saveState();renderInvoices();toast('Invoice deleted')})}
+
+// PDF EXPORT
+function pdfInv(id){exportPDF(id,'invoice')}
+
+function exportPDF(id,type){
+  const doc=type==='quote'?S.quotes?.find(q=>q.id===id):S.invoices?.find(i=>i.id===id);
+  if(!doc)return;
+  const jsPDF=window.jspdf?.jsPDF;
+  if(!jsPDF){toast('PDF library not loaded','e');return}
+  const pdf=new jsPDF({unit:'mm',format:'a4'});
+  const s=S.settings;const cl=S.clients?.find(c=>c.id===doc.clientId);
+  const W=210,M=18;const calc=calcInv(doc);
+
+  // Header
+  pdf.setFillColor(20,18,14);pdf.rect(0,0,W,44,'F');
+  pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(22);
+  pdf.text(s.bizName||'Your Business',M,15);
+  pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.setTextColor(175,168,158);
+  const bLines=[s.email,s.phone,s.abn?'ABN: '+s.abn:null].filter(Boolean);
+  bLines.forEach((l,i)=>pdf.text(l,M,22+i*5));
+  pdf.setTextColor(255,255,255);pdf.setFont('helvetica','bold');pdf.setFontSize(18);
+  pdf.text(type.toUpperCase(),W-M,15,{align:'right'});
+  pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.setTextColor(175,168,158);
+  pdf.text(doc.number,W-M,22,{align:'right'});
+  pdf.text('Date: '+fmtDate(doc.date),W-M,27,{align:'right'});
+  if(doc.due)pdf.text('Due: '+fmtDate(doc.due),W-M,32,{align:'right'});
+
+  let y=56;
+  pdf.setTextColor(20,18,14);
+  pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.text('BILL TO',M,y);
+  pdf.setFont('helvetica','normal');y+=5;
+  if(cl){
+    pdf.setFontSize(11);pdf.setFont('helvetica','bold');pdf.text(cl.name,M,y);y+=5;
+    pdf.setFontSize(8.5);pdf.setFont('helvetica','normal');
+    if(cl.company){pdf.text(cl.company,M,y);y+=4.5}
+    if(cl.email){pdf.text(cl.email,M,y);y+=4.5}
+    if(cl.address){const ls=pdf.splitTextToSize(cl.address,80);pdf.text(ls,M,y);y+=ls.length*4.5}
+  }
+  if(s.address){
+    let ry=56;pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.setTextColor(20,18,14);
+    pdf.text('FROM',W/2+6,ry);pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);ry+=5;
+    const ls=pdf.splitTextToSize(s.address,82);pdf.text(ls,W/2+6,ry);
+  }
+  y=Math.max(y,96)+6;
+
+  pdf.setFillColor(238,234,228);pdf.rect(M,y-2,W-M*2,8,'F');
+  pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);pdf.setTextColor(100,95,85);
+  pdf.text('DESCRIPTION',M+2,y+3.5);pdf.text('QTY',128,y+3.5,{align:'right'});
+  pdf.text('RATE',155,y+3.5,{align:'right'});pdf.text('AMOUNT',W-M-1,y+3.5,{align:'right'});
+  y+=10;
+  pdf.setFont('helvetica','normal');pdf.setTextColor(20,18,14);pdf.setFontSize(8.5);
+  (doc.items||[]).forEach((li,idx)=>{
+    if(idx%2===1){pdf.setFillColor(248,246,242);pdf.rect(M,y-3.5,W-M*2,8,'F')}
+    const amt=(parseFloat(li.qty)||0)*(parseFloat(li.rate)||0);
+    pdf.text(li.desc||'',M+2,y+1);pdf.text(String(li.qty||''),128,y+1,{align:'right'});
+    pdf.text(money(li.rate),155,y+1,{align:'right'});pdf.text(money(amt),W-M-1,y+1,{align:'right'});
+    y+=9;
+  });
+  y+=4;pdf.setDrawColor(215,210,202);pdf.line(M,y,W-M,y);y+=5;
+  const addRow=(lbl,val,bold)=>{
+    if(bold){pdf.setFont('helvetica','bold');pdf.setFontSize(10);}else{pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.setTextColor(100,95,85)}
+    pdf.text(lbl,W-M-52,y);pdf.setTextColor(20,18,14);pdf.text(val,W-M-1,y,{align:'right'});y+=5.5;
+  };
+  addRow('Subtotal',money(calc.sub));
+  if(calc.disc>0)addRow(`Discount (${doc.discount}%)`,`−${money(calc.disc)}`);
+  addRow(`Tax (${doc.taxRate||0}%)`,money(calc.tax));
+  pdf.line(W-M-58,y,W-M,y);y+=4;addRow('TOTAL DUE',money(calc.total),true);
+  if(s.paymentDetails){
+    y+=8;const pls=s.paymentDetails.split('\n');
+    pdf.setFillColor(238,234,228);pdf.rect(M,y-3,W-M*2,pls.length*5+10,'F');
+    pdf.setFont('helvetica','bold');pdf.setFontSize(7.5);pdf.setTextColor(100,95,85);
+    pdf.text('PAYMENT DETAILS',M+3,y+1);y+=6;
+    pdf.setFont('helvetica','normal');pdf.setFontSize(8.5);pdf.setTextColor(20,18,14);
+    pls.forEach(l=>{pdf.text(l,M+3,y);y+=5});
+  }
+  if(doc.notes){y+=6;pdf.setFont('helvetica','italic');pdf.setFontSize(8);pdf.setTextColor(120,115,105);pdf.text(doc.notes,M,y)}
+  pdf.setFontSize(7);pdf.setFont('helvetica','normal');pdf.setTextColor(155,150,143);
+  pdf.text(`${s.bizName} · ${s.email||''} · Created with Folio`,W/2,287,{align:'center'});
+  pdf.save(`${doc.number}.pdf`);
+  logAct(type,'exported PDF',doc.number,id,'📄');toast(`${doc.number}.pdf exported`,'s');
+}
+
+// ═══════════════════════════════════════════════════════
+// QUOTES
+// ═══════════════════════════════════════════════════════
+let qLineItems=[];
+let editQId=null;
+
+function renderQuotes(){
+  const quotes=S.quotes||[];
+  const accVal=quotes.filter(q=>q.status==='accepted').reduce((s,q)=>s+calcInv(q).total,0);
+
+  document.getElementById('page-quotes').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Quotes & Proposals</h1><p>${quotes.length} total · ${money(accVal)} accepted</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openQuoteModal()">+ New Quote</button></div>
+  </div>
+  <div class="card">
+    ${quotes.length===0?`<div class="empty"><div class="empty-ic">📋</div><h3>No quotes yet</h3><p>Create a quote or proposal to win new business.</p><button class="btn btn-primary" onclick="openQuoteModal()">+ Create Quote</button></div>`:`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Quote #</th><th>Client / Lead</th><th>Date</th><th>Expiry</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${[...quotes].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(q=>{
+          const c=calcInv(q);
+          const clOrLead=q.clientId?clientName(q.clientId):(S.leads?.find(l=>l.id===q.leadId)?.name||'—');
+          const sbadge={draft:'b-gray',sent:'b-blue',accepted:'b-teal',declined:'b-red',expired:'b-amber'};
+          return`<tr>
+            <td class="td-bold td-mono">${q.number}</td>
+            <td>${clOrLead}</td>
+            <td class="td-muted">${fmtDate(q.date)}</td>
+            <td class="td-muted">${fmtDate(q.expiry)}</td>
+            <td class="fw6">${money(c.total)}</td>
+            <td><span class="badge ${sbadge[q.status]||'b-gray'}">${q.status}</span></td>
+            <td><div class="flex gap1">
+              ${q.status==='accepted'?`<button class="btn btn-xs btn-success" onclick="q2inv('${q.id}')">→ Invoice</button>`:''}
+              <button class="btn btn-xs btn-secondary" onclick="openQuoteModal('${q.id}')">Edit</button>
+              <button class="btn btn-xs btn-secondary" onclick="exportPDF('${q.id}','quote')">PDF</button>
+              <button class="btn btn-xs btn-danger" onclick="delQuote('${q.id}')">Del</button>
+            </div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+}
+
+function openQuoteModal(id){
+  editQId=id||null;
+  const q=id?S.quotes?.find(q=>q.id===id):null;
+  qLineItems=q?(q.items||[]).map(i=>({...i})):[{id:uid(),desc:'',qty:1,rate:''}];
+  const num=q?.number||`${S.settings.quotePrefix||'QUO'}-${String(S.settings.nextQuote||1).padStart(3,'0')}`;
+
+  showModal(`<div class="modal-ov"><div class="modal xl">
+    <div class="modal-hd"><h2>${id?'Edit Quote':'New Quote'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid" style="margin-bottom:14px">
+        <div class="fg"><label>Client</label><select class="fc" id="q-cl"><option value="">— Select —</option>${(S.clients||[]).map(c=>`<option value="${c.id}" ${q?.clientId===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Quote #</label><input class="fc" id="q-num" value="${num}"/></div>
+        <div class="fg"><label>Status</label><select class="fc" id="q-st">${['draft','sent','accepted','declined','expired'].map(s=>`<option value="${s}" ${(q?.status||'draft')===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Issue Date</label><input class="fc" type="date" id="q-date" value="${q?.date||today()}"/></div>
+        <div class="fg"><label>Expiry Date</label><input class="fc" type="date" id="q-exp" value="${q?.expiry||addDays(today(),30)}"/></div>
+        <div class="fg"><label>Tax Rate (%)</label><input class="fc" type="number" id="q-tax" value="${q?.taxRate??S.settings.taxRate??10}" oninput="updateQTotals()"/></div>
+        <div class="fg"><label>Discount (%)</label><input class="fc" type="number" id="q-disc" value="${q?.discount||0}" oninput="updateQTotals()"/></div>
+        <div class="fg s2"><label>Notes</label><input class="fc" id="q-notes" value="${q?.notes||''}"/></div>
+      </div>
+      <hr class="sec-div"/>
+      <div class="flex jc-b items-c mb3"><label class="form-label" style="margin:0">Line Items</label><button class="btn btn-xs btn-secondary" onclick="addQLI()">+ Add Row</button></div>
+      <div class="li-wrap mb3"><table>
+        <thead><tr><th style="width:42%">Description</th><th style="width:12%">Qty</th><th style="width:18%">Rate ($)</th><th style="width:18%">Amount</th><th style="width:8%"></th></tr></thead>
+        <tbody id="q-li-body"></tbody>
+      </table></div>
+      <div class="inv-totals" id="q-totals"></div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delQuote('${id}');closeModal()">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveQuote()">Save Quote</button>
+    </div>
+  </div></div>`);
+  renderQLI();
+}
+
+function renderQLI(){
+  const body=document.getElementById('q-li-body');if(!body)return;
+  body.innerHTML=qLineItems.map((li,i)=>`
+    <tr>
+      <td><input type="text" value="${li.desc||''}" oninput="qLineItems[${i}].desc=this.value"/></td>
+      <td><input type="number" value="${li.qty||1}" min="0" oninput="qLineItems[${i}].qty=this.value;updateQTotals()"/></td>
+      <td><input type="number" value="${li.rate||''}" min="0" step="0.01" placeholder="0.00" oninput="qLineItems[${i}].rate=this.value;updateQTotals()"/></td>
+      <td style="font-weight:600;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:12px">${money((parseFloat(li.qty)||0)*(parseFloat(li.rate)||0))}</td>
+      <td><button onclick="remQLI(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:3px 8px">✕</button></td>
+    </tr>`).join('');
+  updateQTotals();
+}
+function addQLI(){qLineItems.push({id:uid(),desc:'',qty:1,rate:''});renderQLI()}
+function remQLI(i){qLineItems.splice(i,1);renderQLI()}
+function updateQTotals(){
+  const sub=qLineItems.reduce((s,li)=>s+(parseFloat(li.qty)||0)*(parseFloat(li.rate)||0),0);
+  const tr=parseFloat(document.getElementById('q-tax')?.value)||0;
+  const dr=parseFloat(document.getElementById('q-disc')?.value)||0;
+  const disc=sub*(dr/100);const after=sub-disc;const tax=after*(tr/100);const total=after+tax;
+  const el=document.getElementById('q-totals');
+  if(el)el.innerHTML=`
+    <div class="tot-row"><span class="tl">Subtotal</span><span class="tv">${money(sub)}</span></div>
+    ${dr>0?`<div class="tot-row"><span class="tl">Discount (${dr}%)</span><span class="tv tc-r">−${money(disc)}</span></div>`:''}
+    <div class="tot-row"><span class="tl">Tax (${tr}%)</span><span class="tv">${money(tax)}</span></div>
+    <div class="tot-row grand"><span class="tl">Total</span><span class="tv">${money(total)}</span></div>`;
+}
+
+function saveQuote(){
+  const quote={
+    id:editQId||uid(),number:document.getElementById('q-num')?.value.trim(),
+    clientId:document.getElementById('q-cl')?.value||null,
+    status:document.getElementById('q-st')?.value||'draft',
+    date:document.getElementById('q-date')?.value,
+    expiry:document.getElementById('q-exp')?.value,
+    taxRate:parseFloat(document.getElementById('q-tax')?.value)||0,
+    discount:parseFloat(document.getElementById('q-disc')?.value)||0,
+    notes:document.getElementById('q-notes')?.value.trim(),
+    items:qLineItems.map(li=>({...li})),
+  };
+  if(!S.quotes)S.quotes=[];
+  if(editQId){const i=S.quotes.findIndex(q=>q.id===editQId);if(i>=0)S.quotes[i]=quote;}
+  else{S.quotes.push(quote);S.settings.nextQuote=(S.settings.nextQuote||1)+1;logAct('quote','created',quote.number,quote.id,'📋')}
+  saveState();closeModal();toast(editQId?'Quote updated':'Quote created','s');renderQuotes();
+}
+function delQuote(id){S.quotes=S.quotes.filter(q=>q.id!==id);saveState();renderQuotes();toast('Quote deleted')}
+function q2inv(id){
+  const q=S.quotes?.find(q=>q.id===id);if(!q)return;
+  const num=`${S.settings.invPrefix||'INV'}-${String(S.settings.nextInv||1).padStart(3,'0')}`;
+  const inv={id:uid(),number:num,clientId:q.clientId,projectId:null,status:'draft',date:today(),due:addDays(today(),S.settings.payTerms||14),taxRate:q.taxRate,discount:q.discount,notes:q.notes,items:(q.items||[]).map(li=>({...li,id:uid()})),payments:[]};
+  if(!S.invoices)S.invoices=[];
+  S.invoices.push(inv);S.settings.nextInv=(S.settings.nextInv||1)+1;
+  saveState();toast(`Converted to ${num}`,'s');nav('invoices');
+}
+
+// ═══════════════════════════════════════════════════════
+// EXPENSES
+// ═══════════════════════════════════════════════════════
+let editExId=null;
+function renderExpenses(){
+  const exps=S.expenses||[];
+  const total=exps.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  const ded=exps.filter(e=>e.deductible).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  const curMon=exps.filter(e=>e.date?.startsWith(fmtMonKey(0))).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  const earned=(S.invoices||[]).filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0);
+
+  document.getElementById('page-expenses').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Expenses</h1><p>${exps.length} logged · ${money(ded)} deductible</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="openExpModal()">+ Log Expense</button></div>
+  </div>
+  <div class="stat-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stat"><div class="stat-lbl">Total Expenses</div><div class="stat-val r">${moneyK(total)}</div><div class="stat-sub">All time</div></div>
+    <div class="stat"><div class="stat-lbl">This Month</div><div class="stat-val o">${moneyK(curMon)}</div></div>
+    <div class="stat"><div class="stat-lbl">Tax Deductible</div><div class="stat-val g">${moneyK(ded)}</div></div>
+    <div class="stat"><div class="stat-lbl">Net Profit</div><div class="stat-val ${earned-total>=0?'g':'r'}">${moneyK(earned-total)}</div><div class="stat-sub">Earned − expenses</div></div>
+  </div>
+  <div class="card">
+    ${exps.length===0?`<div class="empty"><div class="empty-ic">💸</div><h3>No expenses</h3><p>Track your business expenses to stay on top of finances.</p><button class="btn btn-primary" onclick="openExpModal()">+ Log Expense</button></div>`:`
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Description</th><th>Merchant</th><th>Category</th><th>Date</th><th>Amount</th><th>Deductible</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${[...exps].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(e=>`
+          <tr>
+            <td class="td-bold">${e.desc}</td>
+            <td class="td-muted">${e.merchant||'—'}</td>
+            <td><span class="badge b-gray">${e.cat||'Other'}</span></td>
+            <td class="td-muted">${fmtDate(e.date)}</td>
+            <td class="fw6 tc-r">−${money(e.amount)}</td>
+            <td>${e.deductible?'<span class="badge b-green">Yes</span>':'<span class="badge b-gray">No</span>'}</td>
+            <td><div class="flex gap1">
+              <button class="btn btn-xs btn-secondary" onclick="openExpModal('${e.id}')">Edit</button>
+              <button class="btn btn-xs btn-danger" onclick="delExp('${e.id}')">Del</button>
+            </div></td>
+          </tr>`).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+}
+
+function openExpModal(id){
+  editExId=id||null;const e=id?S.expenses?.find(e=>e.id===id):null;
+  const cats=['Software','Hardware','Travel','Meals','Marketing','Subscriptions','Office','Subcontractors','Equipment','Education','Other'];
+  showModal(`<div class="modal-ov"><div class="modal">
+    <div class="modal-hd"><h2>${id?'Edit Expense':'Log Expense'}</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrid">
+        <div class="fg s2"><label>Description <span class="req">*</span></label><input class="fc" id="ex-desc" value="${e?.desc||''}"/></div>
+        <div class="fg"><label>Merchant</label><input class="fc" id="ex-mer" value="${e?.merchant||''}"/></div>
+        <div class="fg"><label>Category</label><select class="fc" id="ex-cat">${cats.map(c=>`<option ${e?.cat===c?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div class="fg"><label>Amount ($) <span class="req">*</span></label><input class="fc" type="number" id="ex-amt" value="${e?.amount||''}" step="0.01"/></div>
+        <div class="fg"><label>Tax ($)</label><input class="fc" type="number" id="ex-tax" value="${e?.tax||''}" step="0.01"/></div>
+        <div class="fg"><label>Date</label><input class="fc" type="date" id="ex-date" value="${e?.date||today()}"/></div>
+        <div class="fg"><label>Payment Method</label><select class="fc" id="ex-meth">${['Credit Card','Debit Card','Bank Transfer','Cash','PayPal','Other'].map(m=>`<option ${e?.method===m?'selected':''}>${m}</option>`).join('')}</select></div>
+        <div class="fg"><label>Project (optional)</label><select class="fc" id="ex-proj"><option value="">—</option>${(S.projects||[]).map(p=>`<option value="${p.id}" ${e?.projectId===p.id?'selected':''}>${p.name}</option>`).join('')}</select></div>
+        <div class="fg"><label>Tax Deductible?</label><select class="fc" id="ex-ded"><option value="true" ${e?.deductible!==false?'selected':''}>Yes</option><option value="false" ${e?.deductible===false?'selected':''}>No</option></select></div>
+        <div class="fg s2"><label>Notes</label><input class="fc" id="ex-notes" value="${e?.notes||''}"/></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      ${id?`<button class="btn btn-danger" onclick="delExp('${id}');closeModal()">Delete</button>`:''}
+      <button class="btn btn-primary" onclick="saveExp()">Save Expense</button>
+    </div>
+  </div></div>`);
+}
+
+function saveExp(){
+  const desc=document.getElementById('ex-desc')?.value.trim();
+  const amt=parseFloat(document.getElementById('ex-amt')?.value);
+  if(!desc||isNaN(amt)){toast('Description and amount required','e');return}
+  const exp={id:editExId||uid(),desc,merchant:document.getElementById('ex-mer')?.value.trim(),cat:document.getElementById('ex-cat')?.value,amount:amt,tax:parseFloat(document.getElementById('ex-tax')?.value)||0,date:document.getElementById('ex-date')?.value,method:document.getElementById('ex-meth')?.value,projectId:document.getElementById('ex-proj')?.value||null,deductible:document.getElementById('ex-ded')?.value!=='false',notes:document.getElementById('ex-notes')?.value.trim()};
+  if(!S.expenses)S.expenses=[];
+  if(editExId){const i=S.expenses.findIndex(e=>e.id===editExId);if(i>=0)S.expenses[i]=exp;}
+  else{S.expenses.push(exp);logAct('expense','logged',desc,exp.id,'💸')}
+  saveState();closeModal();toast(editExId?'Expense updated':'Expense logged','s');renderExpenses();
+}
+function delExp(id){S.expenses=S.expenses.filter(e=>e.id!==id);saveState();renderExpenses();toast('Deleted')}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════
+// REPORTS & ANALYTICS
+// ═══════════════════════════════════════════════════════
+function renderReports(){
+  const invs=S.invoices||[];const exps=S.expenses||[];
+  const leads=S.leads||[];const quotes=S.quotes||[];
+
+  const totalRev=invs.filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0);
+  const totalExp=exps.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  const profit=totalRev-totalExp;
+  const margin=totalRev>0?Math.round((profit/totalRev)*100):0;
+
+  // 12 month chart
+  const months=[];
+  for(let i=11;i>=0;i--){
+    const key=fmtMonKey(i);
+    const rev=invs.filter(inv=>inv.status==='paid'&&inv.date?.startsWith(key)).reduce((s,inv)=>s+calcInv(inv).total,0);
+    const exp=exps.filter(e=>e.date?.startsWith(key)).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+    months.push({key,lbl:fmtMonLabel(key),rev,exp,profit:rev-exp});
+  }
+  const maxV=Math.max(...months.map(m=>Math.max(m.rev,m.exp)),1);
+  const curKey=fmtMonKey(0);
+
+  // Revenue by client
+  const byClient=(S.clients||[]).map(c=>({
+    name:c.name,
+    rev:invs.filter(i=>i.clientId===c.id&&i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0)
+  })).filter(c=>c.rev>0).sort((a,b)=>b.rev-a.rev);
+
+  // Expenses by category
+  const byCat={};
+  exps.forEach(e=>{byCat[e.cat||'Other']=(byCat[e.cat||'Other']||0)+parseFloat(e.amount||0)});
+
+  // Conversion stats
+  const wonLeads=leads.filter(l=>l.stage==='won').length;
+  const accQuotes=quotes.filter(q=>q.status==='accepted').length;
+  const paidInvs=invs.filter(i=>i.status==='paid').length;
+
+  document.getElementById('page-reports').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Reports & Analytics</h1><p>Financial overview and business intelligence</p></div>
+    <div class="ph-right">
+      <button class="btn btn-secondary" onclick="exportCSV()">⬇ Export CSV</button>
+    </div>
+  </div>
+
+  <div class="stat-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="stat"><div class="stat-ic">💰</div><div class="stat-lbl">Total Revenue</div><div class="stat-val g">${moneyK(totalRev)}</div><div class="stat-sub">All paid invoices</div></div>
+    <div class="stat"><div class="stat-ic">💸</div><div class="stat-lbl">Total Expenses</div><div class="stat-val r">${moneyK(totalExp)}</div><div class="stat-sub">All logged expenses</div></div>
+    <div class="stat"><div class="stat-ic">📈</div><div class="stat-lbl">Net Profit</div><div class="stat-val ${profit>=0?'g':'r'}">${moneyK(profit)}</div><div class="stat-sub">Revenue minus expenses</div></div>
+    <div class="stat"><div class="stat-ic">📊</div><div class="stat-lbl">Profit Margin</div><div class="stat-val b">${margin}%</div><div class="stat-sub">Of total revenue</div></div>
+  </div>
+
+  <div class="g2 mb4">
+    <div class="card">
+      <div class="card-hd">
+        <div><div class="card-title">Revenue vs Expenses</div><div class="card-sub">12-month comparison</div></div>
+        <div style="display:flex;gap:10px;font-size:11.5px">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenue</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--red-l);border:1px solid var(--red-b);border-radius:2px;display:inline-block"></span>Expenses</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-bars" style="height:150px">
+          ${months.map(m=>`
+            <div class="chart-col">
+              <div style="flex:1;display:flex;align-items:flex-end;gap:2px;width:100%">
+                <div class="chart-bar ${m.key===curKey?'cur':''}" style="flex:1;height:${Math.max(3,(m.rev/maxV)*138)}px" title="Rev: ${money(m.rev)}"></div>
+                <div class="chart-bar exp" style="flex:1;height:${Math.max(3,(m.exp/maxV)*138)}px" title="Exp: ${money(m.exp)}"></div>
+              </div>
+              <div class="chart-lbl">${m.lbl}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Revenue by Client</div></div>
+      <div class="card-body">
+        ${byClient.length===0?`<div class="empty" style="padding:20px"><p>No paid invoices yet</p></div>`:
+          byClient.map(c=>{
+            const pct=totalRev>0?Math.round((c.rev/totalRev)*100):0;
+            return`<div class="mb3">
+              <div class="flex jc-b mb2"><span class="fw6 fs12">${c.name}</span><span class="fw6 fs12">${money(c.rev)}</span></div>
+              <div class="prog"><div class="prog-fill" style="width:${pct}%"></div></div>
+            </div>`;
+          }).join('')}
+      </div>
+    </div>
+  </div>
+
+  <div class="g2 mb4">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Expenses by Category</div></div>
+      <div class="card-body">
+        ${Object.keys(byCat).length===0?`<div class="empty" style="padding:20px"><p>No expenses logged</p></div>`:
+          Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>{
+            const pct=totalExp>0?Math.round((amt/totalExp)*100):0;
+            return`<div class="mb3">
+              <div class="flex jc-b mb2"><span class="fw6 fs12">${cat}</span><span class="fw6 fs12 tc-r">−${money(amt)} (${pct}%)</span></div>
+              <div class="prog"><div class="prog-fill r" style="width:${pct}%"></div></div>
+            </div>`;
+          }).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Conversion Rates</div></div>
+      <div class="card-body">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          ${[
+            {lbl:'Quote Conversion',n:accQuotes,d:quotes.length,col:''},
+            {lbl:'Lead Win Rate',n:wonLeads,d:leads.length,col:'g'},
+            {lbl:'Invoice Collection',n:paidInvs,d:invs.length,col:'g'},
+          ].map(r=>{
+            const pct=r.d>0?Math.round((r.n/r.d)*100):0;
+            return`<div>
+              <div class="flex jc-b mb2"><span class="fw6 fs12">${r.lbl}</span><span class="fw7 fs12 ${r.col?'tc-'+r.col:'tc-b'}">${pct}%</span></div>
+              <div class="prog"><div class="prog-fill ${r.col}" style="width:${pct}%"></div></div>
+              <div class="fs11 tc-m" style="margin-top:3px">${r.n} of ${r.d}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-title">Month-by-Month Financial Table</div></div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Month</th><th>Revenue</th><th>Expenses</th><th>Profit</th><th>Margin</th></tr></thead>
+        <tbody>
+          ${months.map(m=>`
+            <tr>
+              <td class="fw6">${m.lbl}</td>
+              <td class="tc-g fw6">${money(m.rev)}</td>
+              <td class="tc-r">${money(m.exp)}</td>
+              <td class="${m.profit>=0?'tc-g':'tc-r'} fw6">${money(m.profit)}</td>
+              <td>${m.rev>0?Math.round((m.profit/m.rev)*100)+'%':'—'}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function exportCSV(){
+  const rows=[['Month','Revenue','Expenses','Profit','Margin']];
+  for(let i=11;i>=0;i--){
+    const key=fmtMonKey(i);
+    const d=new Date(key+'-01');
+    const lbl=d.toLocaleDateString('en-AU',{month:'long',year:'numeric'});
+    const rev=(S.invoices||[]).filter(inv=>inv.status==='paid'&&inv.date?.startsWith(key)).reduce((s,inv)=>s+calcInv(inv).total,0);
+    const exp=(S.expenses||[]).filter(e=>e.date?.startsWith(key)).reduce((s,e)=>s+parseFloat(e.amount||0),0);
+    const profit=rev-exp;
+    rows.push([lbl,rev.toFixed(2),exp.toFixed(2),profit.toFixed(2),rev>0?((profit/rev)*100).toFixed(1)+'%':'0%']);
+  }
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=`folio-report-${today()}.csv`;a.click();
+  toast('CSV exported','s');
+}
+
+// ═══════════════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════════════
+let calDate=new Date();
+
+function getCalEvents(){
+  const evs=[];
+  (S.invoices||[]).filter(i=>i.due&&['sent','unpaid'].includes(invStatus(i))).forEach(i=>evs.push({date:i.due,label:i.number+' due',type:'invoice',icon:'📄',color:'#ea580c'}));
+  (S.invoices||[]).filter(i=>invStatus(i)==='overdue').forEach(i=>evs.push({date:i.due,label:'⚠ '+i.number+' OVERDUE',type:'overdue',icon:'🚨',color:'#dc2626'}));
+  (S.projects||[]).filter(p=>p.status==='active'&&p.deadline).forEach(p=>evs.push({date:p.deadline,label:p.name+' deadline',type:'project',icon:'📁',color:'#2d5be3'}));
+  (S.tasks||[]).filter(t=>t.status!=='done'&&t.due).forEach(t=>evs.push({date:t.due,label:t.title,type:'task',icon:'✅',color:'#16a34a'}));
+  (S.leads||[]).filter(l=>l.followUp).forEach(l=>evs.push({date:l.followUp,label:'Follow up: '+l.name,type:'lead',icon:'🎯',color:'#7c3aed'}));
+  (S.quotes||[]).filter(q=>q.expiry&&['sent','draft'].includes(q.status)).forEach(q=>evs.push({date:q.expiry,label:q.number+' expires',type:'quote',icon:'📋',color:'#d97706'}));
+  return evs;
+}
+
+function renderCalendar(){
+  const evs=getCalEvents();
+  const year=calDate.getFullYear();
+  const month=calDate.getMonth();
+  const firstDay=new Date(year,month,1).getDay();
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const monthName=calDate.toLocaleDateString('en-AU',{month:'long',year:'numeric'});
+  const t=today();
+
+  // Upcoming events (next 30 days)
+  const upcoming=evs.filter(e=>e.date>=t&&e.date<=addDays(t,30)).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
+
+  document.getElementById('page-calendar').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Calendar</h1><p>Deadlines, due dates, and follow-ups</p></div>
+    <div class="ph-right">
+      <button class="btn btn-secondary" onclick="calDate.setMonth(calDate.getMonth()-1);renderCalendar()">← Prev</button>
+      <span style="font-size:14px;font-weight:700;padding:0 8px;min-width:160px;text-align:center;display:inline-block">${monthName}</span>
+      <button class="btn btn-secondary" onclick="calDate.setMonth(calDate.getMonth()+1);renderCalendar()">Next →</button>
+      <button class="btn btn-ghost btn-sm" onclick="calDate=new Date();renderCalendar()">Today</button>
+    </div>
+  </div>
+  <div class="card mb4">
+    <div class="card-body" style="padding:14px">
+      <div class="cal-grid" style="margin-bottom:6px">
+        ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-dh">${d}</div>`).join('')}
+      </div>
+      <div class="cal-grid">
+        ${Array(firstDay===0?0:firstDay).fill(0).map(()=>'<div class="cal-day other"></div>').join('')}
+        ${Array.from({length:daysInMonth},(_,i)=>{
+          const day=i+1;
+          const ds=`${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+          const dayEvs=evs.filter(e=>e.date===ds);
+          const isT=ds===t;
+          return`<div class="cal-day${isT?' today':''}">
+            <div class="cal-dn" style="color:${isT?'var(--accent)':'var(--text)'};font-weight:${isT?'800':'600'}">${day}</div>
+            ${dayEvs.slice(0,3).map(e=>`<div class="cal-ev" style="background:${e.color}" title="${e.label}">${e.label}</div>`).join('')}
+            ${dayEvs.length>3?`<div style="font-size:9px;color:var(--muted)">+${dayEvs.length-3} more</div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Upcoming (Next 30 Days)</div></div>
+      <div class="card-body p0">
+        ${upcoming.length===0?`<div class="empty"><p>No upcoming events</p></div>`:
+          upcoming.map(e=>`
+            <div class="act-item" style="padding:9px 18px">
+              <div class="act-ic" style="background:${e.color}22;color:${e.color}">${e.icon}</div>
+              <div class="act-txt"><div class="fw6">${e.label}</div><div class="fs11 tc-m">${e.type} · ${fmtDate(e.date)}</div></div>
+              <span class="badge" style="background:${isOver(e.date)?'var(--red-l)':'var(--accent-l)'};color:${isOver(e.date)?'var(--red)':'var(--accent)'}">${fmtShort(e.date)}</span>
+            </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Overdue Items</div></div>
+      <div class="card-body p0">
+        ${evs.filter(e=>isOver(e.date)).length===0?`<div class="empty"><div style="font-size:28px;margin-bottom:8px">🎉</div><p>Nothing overdue! Great work.</p></div>`:
+          evs.filter(e=>isOver(e.date)).slice(0,6).map(e=>`
+            <div class="act-item" style="padding:9px 18px">
+              <div class="act-ic" style="background:var(--red-l);color:var(--red)">${e.icon}</div>
+              <div class="act-txt"><div class="fw6">${e.label}</div><div class="fs11 tc-r">Overdue since ${fmtDate(e.date)}</div></div>
+            </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════
+function renderSettings(){
+  const s=S.settings;
+  document.getElementById('page-settings').innerHTML=`
+  <div class="ph">
+    <div class="ph-left"><h1>Settings</h1><p>Business profile, preferences, and data management</p></div>
+    <div class="ph-right"><button class="btn btn-primary" onclick="saveSettings()">Save All Changes</button></div>
+  </div>
+  <div style="max-width:680px;display:flex;flex-direction:column;gap:18px">
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Business Profile</div></div>
+      <div class="card-body">
+        <div class="fgrid" style="gap:13px">
+          <div class="fg"><label>Business Name</label><input class="fc" id="s-biz" value="${s.bizName||''}"/></div>
+          <div class="fg"><label>Owner Name</label><input class="fc" id="s-owner" value="${s.ownerName||''}"/></div>
+          <div class="fg"><label>Email</label><input class="fc" id="s-email" value="${s.email||''}"/></div>
+          <div class="fg"><label>Phone</label><input class="fc" id="s-phone" value="${s.phone||''}"/></div>
+          <div class="fg"><label>Website</label><input class="fc" id="s-web" value="${s.website||''}"/></div>
+          <div class="fg"><label>ABN / Tax Number</label><input class="fc" id="s-abn" value="${s.abn||''}"/></div>
+          <div class="fg s2"><label>Business Address</label><input class="fc" id="s-addr" value="${s.address||''}"/></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Financial Defaults</div></div>
+      <div class="card-body">
+        <div class="fgrid" style="gap:13px">
+          <div class="fg"><label>Default Tax Rate (%)</label><input class="fc" type="number" id="s-tax" value="${s.taxRate??10}" min="0" max="100"/></div>
+          <div class="fg"><label>Default Payment Terms (days)</label><input class="fc" type="number" id="s-terms" value="${s.payTerms??14}" min="1"/></div>
+          <div class="fg"><label>Currency</label>
+            <select class="fc" id="s-cur">
+              ${[['AUD','$'],['USD','$'],['GBP','£'],['EUR','€'],['NZD','$'],['CAD','$'],['SGD','$'],['HKD','$']].map(([c,sym])=>`<option value="${c}" data-sym="${sym}" ${s.currency===c?'selected':''}>${c} (${sym})</option>`).join('')}
+            </select>
+          </div>
+          <div class="fg"><label>Invoice Number Prefix</label><input class="fc" id="s-invpfx" value="${s.invPrefix||'INV'}"/></div>
+          <div class="fg"><label>Quote Number Prefix</label><input class="fc" id="s-qpfx" value="${s.quotePrefix||'QUO'}"/></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Bank & Payment Details</div></div>
+      <div class="card-body">
+        <div class="fgrid" style="gap:13px">
+          <div class="fg"><label>Bank Name</label><input class="fc" id="s-bank" value="${s.bankName||''}"/></div>
+          <div class="fg"><label>BSB</label><input class="fc" id="s-bsb" value="${s.bsb||''}"/></div>
+          <div class="fg"><label>Account Number</label><input class="fc" id="s-acct" value="${s.accountNo||''}"/></div>
+          <div class="fg s2"><label>Payment Instructions (shown on invoices & PDFs)</label><textarea class="fc" id="s-pay" rows="3">${s.paymentDetails||''}</textarea></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Appearance</div></div>
+      <div class="card-body">
+        <div class="flex gap2">
+          <button class="btn ${s.theme!=='dark'?'btn-primary':'btn-secondary'}" onclick="setTheme('light');renderSettings()">☀️ Light Mode</button>
+          <button class="btn ${s.theme==='dark'?'btn-primary':'btn-secondary'}" onclick="setTheme('dark');renderSettings()">🌙 Dark Mode</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Data Management</div></div>
+      <div class="card-body">
+        <div class="flex gap2 mb3" style="flex-wrap:wrap">
+          <button class="btn btn-secondary" onclick="exportBackup()">⬇ Export Backup (.json)</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">⬆ Import Backup</button>
+          <input type="file" id="import-file" style="display:none" accept=".json" onchange="importBackup(this.files[0])"/>
+          <button class="btn btn-danger" onclick="resetApp()">🗑 Reset All Data</button>
+        </div>
+        <div class="fs12 tc-m">
+          ${S.clients?.length||0} clients · ${S.projects?.length||0} projects · ${S.invoices?.length||0} invoices ·
+          ${S.quotes?.length||0} quotes · ${S.expenses?.length||0} expenses · ${S.tasks?.length||0} tasks
+        </div>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function saveSettings(){
+  const sel=document.getElementById('s-cur');
+  S.settings={
+    ...S.settings,
+    bizName:document.getElementById('s-biz')?.value.trim()||S.settings.bizName,
+    ownerName:document.getElementById('s-owner')?.value.trim()||S.settings.ownerName,
+    email:document.getElementById('s-email')?.value.trim(),
+    phone:document.getElementById('s-phone')?.value.trim(),
+    website:document.getElementById('s-web')?.value.trim(),
+    abn:document.getElementById('s-abn')?.value.trim(),
+    address:document.getElementById('s-addr')?.value.trim(),
+    taxRate:parseFloat(document.getElementById('s-tax')?.value)||10,
+    payTerms:parseInt(document.getElementById('s-terms')?.value)||14,
+    currency:sel?.value||'AUD',
+    sym:sel?.options[sel?.selectedIndex]?.dataset?.sym||'$',
+    invPrefix:document.getElementById('s-invpfx')?.value.trim()||'INV',
+    quotePrefix:document.getElementById('s-qpfx')?.value.trim()||'QUO',
+    bankName:document.getElementById('s-bank')?.value.trim(),
+    bsb:document.getElementById('s-bsb')?.value.trim(),
+    accountNo:document.getElementById('s-acct')?.value.trim(),
+    paymentDetails:document.getElementById('s-pay')?.value.trim(),
+  };
+  saveState();updateSidebar();toast('Settings saved','s');
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+function init(){
+  loadState();
+  setTheme(S.settings.theme||'light');
+  updateSidebar();
+  updateBadges();
+  renderDash();
+
+  // Mobile menu button
+  if(window.innerWidth<=900){
+    const mb=document.getElementById('menu-btn');
+    if(mb)mb.style.display='flex';
+  }
+  window.addEventListener('resize',()=>{
+    const mb=document.getElementById('menu-btn');
+    if(mb)mb.style.display=window.innerWidth<=900?'flex':'none';
+  });
+}
+
+// Fix the greeting string template issue
+function getGreetStr(){
+  const h=new Date().getHours();
+  return h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+}
+
+// Patch renderDash to use fixed greeting
+const _renderDash=renderDash;
+function renderDash(){
+  updateBadges();
+  const invs=S.invoices||[];const exps=S.expenses||[];
+  const projs=S.projects||[];const tasks=S.tasks||[];
+  const earned=invs.filter(i=>i.status==='paid').reduce((s,i)=>s+calcInv(i).total,0);
+  const outstanding=invs.filter(i=>['sent','unpaid'].includes(invStatus(i))).reduce((s,i)=>s+calcInv(i).balance,0);
+  const overdueAmt=invs.filter(i=>invStatus(i)==='overdue').reduce((s,i)=>s+calcInv(i).balance,0);
+  const totalExp=exps.reduce((s,e)=>s+parseFloat(e.amount||0),0);
+  const netProfit=earned-totalExp;
+  const activeProj=projs.filter(p=>p.status==='active').length;
+  const overdueT=tasks.filter(t=>t.status!=='done'&&isOver(t.due)).length;
+  const months=[];
+  for(let i=5;i>=0;i--){const key=fmtMonKey(i);const rev=invs.filter(inv=>inv.status==='paid'&&inv.date?.startsWith(key)).reduce((s,inv)=>s+calcInv(inv).total,0);const exp=exps.filter(e=>e.date?.startsWith(key)).reduce((s,e)=>s+parseFloat(e.amount||0),0);months.push({key,lbl:fmtMonLabel(key),rev,exp});}
+  const maxChart=Math.max(...months.map(m=>Math.max(m.rev,m.exp)),1);
+  const curKey=fmtMonKey(0);
+  const deadlines=[
+    ...projs.filter(p=>p.status==='active'&&p.deadline).map(p=>({label:p.name,date:p.deadline,type:'project',id:p.id})),
+    ...tasks.filter(t=>t.status!=='done'&&t.due).map(t=>({label:t.title,date:t.due,type:'task',id:t.id})),
+    ...invs.filter(i=>['sent','unpaid'].includes(invStatus(i))&&i.due).map(i=>({label:i.number+' due',date:i.due,type:'invoice',id:i.id})),
+  ].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,5);
+
+  const greet=getGreetStr();
+  const firstName=(S.settings.ownerName||'').split(' ')[0]||'there';
+
+  document.getElementById('page-dashboard').innerHTML=`
+  <div class="ph">
+    <div class="ph-left">
+      <h1>${greet}, ${firstName} 👋</h1>
+      <p>Here's what's happening with your business today.</p>
+    </div>
+    <div class="ph-right">
+      <div class="qa-grid">
+        <div class="qa" onclick="openInvModal()"><span>📄</span> New Invoice</div>
+        <div class="qa" onclick="openClientModal()"><span>👤</span> Add Client</div>
+        <div class="qa" onclick="nav('time')"><span>⏱</span> Start Timer</div>
+        <div class="qa" onclick="openExpModal()"><span>💸</span> Log Expense</div>
+        <div class="qa" onclick="openQuoteModal()"><span>📋</span> New Quote</div>
+      </div>
+    </div>
+  </div>
+  <div class="stat-grid" style="grid-template-columns:repeat(6,1fr)">
+    <div class="stat"><div class="stat-ic">💰</div><div class="stat-lbl">Total Earned</div><div class="stat-val g">${moneyK(earned)}</div><div class="stat-sub">${invs.filter(i=>i.status==='paid').length} paid invoices</div></div>
+    <div class="stat"><div class="stat-ic">⏳</div><div class="stat-lbl">Outstanding</div><div class="stat-val o">${moneyK(outstanding)}</div><div class="stat-sub">${invs.filter(i=>['sent','unpaid'].includes(invStatus(i))).length} invoices</div></div>
+    <div class="stat"><div class="stat-ic">🚨</div><div class="stat-lbl">Overdue</div><div class="stat-val r">${moneyK(overdueAmt)}</div><div class="stat-sub">${invs.filter(i=>invStatus(i)==='overdue').length} overdue</div></div>
+    <div class="stat"><div class="stat-ic">📈</div><div class="stat-lbl">Net Profit</div><div class="stat-val ${netProfit>=0?'g':'r'}">${moneyK(netProfit)}</div><div class="stat-sub">After expenses</div></div>
+    <div class="stat"><div class="stat-ic">📁</div><div class="stat-lbl">Active Projects</div><div class="stat-val b">${activeProj}</div><div class="stat-sub">${projs.length} total</div></div>
+    <div class="stat"><div class="stat-ic">⚡</div><div class="stat-lbl">Overdue Tasks</div><div class="stat-val ${overdueT>0?'r':'g'}">${overdueT}</div><div class="stat-sub">${tasks.filter(t=>t.status!=='done').length} open</div></div>
+  </div>
+  <div class="g2 mb4">
+    <div class="card">
+      <div class="card-hd">
+        <div><div class="card-title">Revenue vs Expenses</div><div class="card-sub">Last 6 months</div></div>
+        <div style="display:flex;gap:10px;font-size:11.5px">
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenue</span>
+          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--red-l);border:1px solid var(--red-b);border-radius:2px;display:inline-block"></span>Expenses</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="chart-bars">
+          ${months.map(m=>`
+            <div class="chart-col">
+              <div style="flex:1;display:flex;align-items:flex-end;gap:2px;width:100%">
+                <div class="chart-bar ${m.key===curKey?'cur':''}" style="flex:1;height:${Math.max(4,(m.rev/maxChart)*118)}px" title="Rev: ${money(m.rev)}"></div>
+                <div class="chart-bar exp" style="flex:1;height:${Math.max(4,(m.exp/maxChart)*118)}px" title="Exp: ${money(m.exp)}"></div>
+              </div>
+              <div class="chart-lbl">${m.lbl}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Invoice Status</div><button class="btn btn-sm btn-secondary" onclick="nav('invoices')">View All</button></div>
+      <div class="card-body">
+        ${[
+          {lbl:'Paid',n:invs.filter(i=>i.status==='paid').length,cls:'g'},
+          {lbl:'Outstanding',n:invs.filter(i=>['sent','unpaid'].includes(invStatus(i))).length,cls:'o'},
+          {lbl:'Overdue',n:invs.filter(i=>invStatus(i)==='overdue').length,cls:'r'},
+          {lbl:'Draft',n:invs.filter(i=>i.status==='draft').length,cls:''},
+        ].map(r=>{
+          const pct=invs.length?Math.round(r.n/invs.length*100):0;
+          return`<div class="mb3"><div class="flex items-c jc-b mb2"><span class="fw6 fs12">${r.lbl}</span><span class="tc-m fs12">${r.n}</span></div><div class="prog"><div class="prog-fill ${r.cls}" style="width:${pct}%"></div></div></div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Upcoming Deadlines</div></div>
+      <div class="card-body p0">
+        ${deadlines.length===0?`<div class="empty"><div class="empty-ic">📅</div><p>No upcoming deadlines — all clear!</p></div>`:
+          deadlines.map(d=>{
+            const over=isOver(d.date);
+            const icons={project:'📁',task:'✅',invoice:'📄'};
+            return`<div class="act-item" style="padding:9px 18px">
+              <div class="act-ic" style="background:${over?'var(--red-l)':'var(--surface2)'};">${icons[d.type]}</div>
+              <div class="act-txt"><div class="fw6">${d.label}</div><div style="font-size:11px;color:${over?'var(--red)':'var(--muted)'}">${over?'⚠ Overdue · ':''}${fmtDate(d.date)}</div></div>
+              <span class="badge b-${d.type==='project'?'blue':d.type==='task'?'green':'orange'}">${d.type}</span>
+            </div>`;
+          }).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title">Recent Activity</div></div>
+      <div class="card-body p0">
+        ${(S.activity||[]).length===0?`<div class="empty"><p>No activity yet</p></div>`:
+          (S.activity||[]).slice(0,6).map(a=>`
+            <div class="act-item" style="padding:9px 18px">
+              <div class="act-ic">${a.icon}</div>
+              <div class="act-txt"><span class="fw6">${a.entity}</span> <span class="tc-m">${a.action}</span></div>
+              <div class="act-time">${fmtShort(a.date)}</div>
+            </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+init();
+</script>
+</body>
+</html>
